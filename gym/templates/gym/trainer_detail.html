@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class="jumbotron">
+  <h1>Welcome to the Trainer Detail Page </h1>
+  <h2>Trainer Details: </h2>
+  <p>Name: {{trainer_detail.user.username }}</p>
+  <p>Age: {{ trainer_detail.age }}</p>
+  <p>Skills: {{ trainer_detail.skills }}</p>
+  <p>Location: {{ trainer_detail.location}}</p>
+
+  <h2>Workouts</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for workout in trainer_detail.workouts.all %}
+    {{ workout.name }}: £{{ workout.price }}
+    <input type="radio" name="workout" value="{{ workout.price }}"><br>
+    {% endfor%}
+    <input type="submit" value="Submit">
+
+
+</form>
+
+
+
+</div>
+
+
+
+{% endblock %}

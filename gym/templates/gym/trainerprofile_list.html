@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>List Of Trainers</h1>
+
+  {% if not trainers %}
+  <p>There are no trainers</p>
+  {% else %}
+  <ol>
+    {% for trainer in trainers %}
+    <h2> <li><a href="{% url 'gym:trainer_detail' pk=trainer.pk %}">{{ trainer.user.username }}</a> </li> </h2>
+    {% endfor%}
+  </ol>
+
+  {% endif %}
+
+{% endblock %}
