@@ -46,5 +46,8 @@ class Workout(models.Model):
     name = models.CharField(max_length=200,null=True)
     price = models.IntegerField()
 
+    def get_absolute_url(self):
+        return reverse('gym:trainer_detail', kwargs={'pk':self.pk})
+
     def __str__(self):
         return self.name

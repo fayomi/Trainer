@@ -5,6 +5,7 @@
   <h1>Welcome to the Trainer Detail Page </h1>
   <h2>Trainer Details: </h2>
   <p>Name: {{trainer_detail.user.username }}</p>
+  <p>Description: {{trainer_detail.description}}</p>
   <p>Age: {{ trainer_detail.age }}</p>
   <p>Skills: {{ trainer_detail.skills }}</p>
   <p>Location: {{ trainer_detail.location}}</p>
@@ -19,11 +20,13 @@
     <input type="radio" name="workout" value="{{ workout.price }}"><br>
     {% endfor%}
     <input type="submit" value="Submit">
-
-
 </form>
 
+</div>
 
+<div class="container">
+  <p> <a class="btn btn-warning" href="{% url 'gym:workout_update' pk=trainer_detail.pk %}">Update</a> </p>
+  <p> <a class="btn btn-success" href="{% url 'gym:workout_create'%}">Add New Workout</a> </p>
 
 </div>
 

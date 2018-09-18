@@ -1,0 +1,28 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+
+{% if not form.instance.pk %}
+<h1>Add A Workout</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+
+  <input type="submit" class="btn btn-primary" name="" value="Add">
+
+</form>
+
+{% else %}
+<h1>Update Workout</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" class="btn btn-primary" name="" value="Update">
+
+</form>
+{% endif %}
+
+
+{% endblock %}

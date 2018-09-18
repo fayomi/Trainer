@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import (View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView)
 from .forms import TrainerSignUpForm, TrainerProfileForm,ClientSignUpForm,ClientProfileForm
 from django.contrib.auth import login, authenticate
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import User,TrainerProfile, Workout
+from .models import User,TrainerProfile, Workout, ClientProfile
 
 
 
@@ -21,6 +21,19 @@ class TrainerDetailView(DetailView):
     context_object_name = 'trainer_detail'
     model = TrainerProfile
     template_name = 'gym/trainer_detail.html'
+
+class WorkoutCreateView(LoginRequiredMixin,CreateView):
+
+    model = Workout
+    fields = ('trainer','name','price')
+
+class WorkoutUpdateView(LoginRequiredMixin,UpdateView):
+    model = Workout
+    fields = ('name','price')
+
+
+
+
 
 
 def trainerRegister(request):
