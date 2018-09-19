@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import (View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView)
-from .forms import TrainerSignUpForm, TrainerProfileForm,ClientSignUpForm,ClientProfileForm
+from .forms import TrainerSignUpForm, TrainerProfileForm,ClientSignUpForm,ClientProfileForm,WorkoutForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,6 +22,10 @@ class TrainerDetailView(DetailView):
     model = TrainerProfile
     template_name = 'gym/trainer_detail.html'
 
+class TrainerUpdateView(LoginRequiredMixin,UpdateView):
+    model = TrainerProfile
+    fields = ('profile_img','skills','location')
+
 class WorkoutCreateView(LoginRequiredMixin,CreateView):
 
     model = Workout
@@ -31,6 +35,31 @@ class WorkoutUpdateView(LoginRequiredMixin,UpdateView):
     model = Workout
     fields = ('name','price')
 
+
+@login_required
+def addWorkout(request,pk):
+    trainerProfile = get_object_or_404(TrainerProfile,pk=pk)
+    trainer_pk = trainerProfile.pk
+    if request.method == 'POST':
+        form = WorkoutForm(request.POST)
+        if form.is_valid():
+            workout = form.save(commit=False)
+            workout.trainer = trainerProfile
+            workout.save()
+            return redirect('gym:trainer_detail',pk=trainer_pk)
+    else:
+        form = WorkoutForm()
+
+    context = {'form':form}
+
+    return render(request,'gym/workout_form.html',context)
+
+@login_required
+def deleteWorkout(reques,pk):
+    workout = get_object_or_404(Workout,pk=pk)
+    trainer_pk = workout.trainer.pk
+    workout.delete()
+    return redirect('gym:trainer_detail',pk=trainer_pk)
 
 
 

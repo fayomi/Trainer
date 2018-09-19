@@ -39,3 +39,8 @@ class ClientProfileForm(forms.ModelForm):
     class Meta:
         model = ClientProfile
         fields = ('name','goals','gender','age','location','profile_img')
+
+class WorkoutForm(forms.ModelForm):
+    class Meta:
+        model = Workout
+        fields = ('name','price')
