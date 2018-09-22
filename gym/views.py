@@ -1,13 +1,15 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404,HttpResponse
 from django.views.generic import (View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView)
 from .forms import TrainerSignUpForm, TrainerProfileForm,ClientSignUpForm,ClientProfileForm,WorkoutForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import User,TrainerProfile, Workout, ClientProfile
+import stripe
+from django.conf import settings
 
 
-
+stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 # @login_required
 class ProfileView(LoginRequiredMixin,TemplateView):
@@ -19,8 +21,36 @@ class TrainerListView(ListView):
 
 class TrainerDetailView(DetailView):
     context_object_name = 'trainer_detail'
+
     model = TrainerProfile
     template_name = 'gym/trainer_detail.html'
+
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['price'] = 200 #this is just for the display
+        context['description']  = 'New Fayomi Order'
+        context['data_key']  = settings.STRIPE_PUBLISHABLE_KEY
+
+        return context
+
+    def post(self,request, pk):
+        description = 'New post description'
+
+        if request.method == 'POST':
+            token = request.POST['stripeToken']
+            email = request.POST['stripeEmail']
+            customer = stripe.Customer.create(email=email,source=token)
+            charge = stripe.Charge.create(amount=5000,currency="gbp",description=description,customer=customer.id)
+            return redirect('/')
+
+
+
+
+
+
 
 class TrainerUpdateView(LoginRequiredMixin,UpdateView):
     model = TrainerProfile

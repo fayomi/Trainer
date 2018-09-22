@@ -14,7 +14,7 @@
 
 <!-- this is the view if the user is a trainer -->
   {% if user.is_trainer %}
-  <form method="post">
+  <form action="{% url 'gym:trainer_detail' pk=trainer_detail.pk %}" method="POST">
     {% csrf_token %}
     {% for workout in trainer_detail.workouts.all %}
     {{ workout.name }}: £{{ workout.price }}
@@ -24,7 +24,6 @@
     <br>
 
     {% endfor%}
-    <input type="submit" value="Submit">
 </form>
 
 </div>
@@ -36,7 +35,7 @@
 </div>
 <!-- this is the view if the user is a client -->
   {% else %}
-  <form method="post">
+  <form action="{% url 'gym:trainer_detail' pk=trainer_detail.pk %}" method="GET">
     {% csrf_token %}
 
     {% for workout in trainer_detail.workouts.all %}
@@ -48,6 +47,25 @@
     <input type="submit" value="Submit">
 </form>
 {% endif %}
+
+<div class="container">
+  <form action="{% url 'gym:trainer_detail' pk=trainer_detail.pk %}" method="POST">
+    {% csrf_token %}
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="{{ data_key }}"
+    data-amount="{{price}}"
+    data-name="PT"
+    data-description="{{ description }}"
+    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+    data-locale="auto"
+    data-currency="gbp"
+    data-billing-address="true"
+    data-zip-code="true">
+  </script>
+</form>
+
+</div>
 
 
 

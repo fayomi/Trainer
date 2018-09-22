@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'gym'
+    'gym',
+    'stripe',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 
 LOGOUT_REDIRECT_URL = '/'
+
+STRIPE_SECRET_KEY = 'xxx'
+STRIPE_PUBLISHABLE_KEY = 'xxx'
