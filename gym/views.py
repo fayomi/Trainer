@@ -30,7 +30,6 @@ class TrainerDetailView(DetailView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['price'] = 200 #this is just for the display
         context['description']  = 'New Fayomi Order'
         context['data_key']  = settings.STRIPE_PUBLISHABLE_KEY
 
@@ -85,7 +84,7 @@ def addWorkout(request,pk):
     return render(request,'gym/workout_form.html',context)
 
 @login_required
-def deleteWorkout(reques,pk):
+def deleteWorkout(request,pk):
     workout = get_object_or_404(Workout,pk=pk)
     trainer_pk = workout.trainer.pk
     workout.delete()

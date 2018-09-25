@@ -2,7 +2,6 @@
 
 {% block content%}
 <div class="jumbotron">
-  <h1>Welcome to the Trainer Detail Page </h1>
   <h2>Trainer Details: </h2>
   <p>Name: {{trainer_detail.user.username }}</p>
   <p>Description: {{trainer_detail.description}}</p>
@@ -40,7 +39,7 @@
 
     {% for workout in trainer_detail.workouts.all %}
     {{ workout.name }}: £{{ workout.price }}
-    <input type="radio" name="workout" value="{{ workout.price }}">
+    <a class="btn btn-primary" href="{% url 'cart:add_cart' pk=workout.pk %}">Add To Cart</a>
     <br>
 
     {% endfor%}
@@ -48,24 +47,7 @@
 </form>
 {% endif %}
 
-<div class="container">
-  <form action="{% url 'gym:trainer_detail' pk=trainer_detail.pk %}" method="POST">
-    {% csrf_token %}
-  <script
-    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-    data-key="{{ data_key }}"
-    data-amount="{{price}}"
-    data-name="PT"
-    data-description="{{ description }}"
-    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-    data-locale="auto"
-    data-currency="gbp"
-    data-billing-address="true"
-    data-zip-code="true">
-  </script>
-</form>
 
-</div>
 
 
 
