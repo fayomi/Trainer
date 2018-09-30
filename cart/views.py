@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from gym.models import Workout
+from order.models import Order, OrderItem
 from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import (View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView)
 from django.contrib.auth.decorators import login_required
-
+import stripe
+from django.conf import settings
 
 
 # Create your views here.
@@ -31,6 +33,7 @@ def add_cart(request, pk):
         cart_item.save()
     return redirect('cart:cart_detail')
 
+
 def cart_detail(request, total=0, counter=0, cart_items = None):
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -38,11 +41,60 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         for cart_item in cart_items:
             total += (cart_item.workout.price * cart_item.quantity)
             counter += cart_item.quantity
-            stripe_total = total * 100
+
     except ObjectDoesNotExist:
         pass
 
-    context = {'cart_items': cart_items, 'total': total,'stripe_total': stripe_total, 'counter': counter}
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    stripe_total = total * 100
+    data_key = settings.STRIPE_PUBLISHABLE_KEY
+    description = 'brand new order'
+
+
+    if request.method == 'POST':
+        token = request.POST['stripeToken']
+        email = request.POST['stripeEmail']
+        billingName = request.POST['stripeBillingName']
+        billingAddress1 = request.POST['stripeBillingAddressLine1']
+        billingCity = request.POST['stripeBillingAddressCity']
+        billingPostcode = request.POST['stripeBillingAddressZip']
+        billingCountry = request.POST['stripeBillingAddressCountryCode']
+
+        customer = stripe.Customer.create(email=email,source=token)
+        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,customer=customer.id)
+
+        #Now Creating the Order
+        try:
+            order_details = Order.objects.create(
+                    token = token,
+                    total = total,
+                    emailAddress = email,
+                    billingName = billingName,
+                    billingAddress1 = billingAddress1,
+                    billingCity = billingCity,
+                    billingPostcode = billingPostcode,
+                    billingCountry = billingCountry
+            )
+            order_details.save()
+
+            for order_item in cart_items:
+                oi = OrderItem.objects.create(
+                        workout = order_item.workout.name,
+                        quantity = order_item.quantity,
+                        price = order_item.workout.price,
+                        order = order_details
+
+                )
+                oi.save()
+                # the terminal will print confirmation
+                print('order has been created')
+
+            return redirect('order:thanks', order_details.id)
+        except ObjectDoesNotExist:
+            pass
+
+
+    context = {'data_key': data_key,'description':description,'cart_items': cart_items, 'total': total,'stripe_total': stripe_total, 'counter': counter}
     return render(request,'cart/cart.html', context)
 
 

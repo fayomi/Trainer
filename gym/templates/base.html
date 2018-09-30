@@ -33,6 +33,7 @@
         {% if user.is_authenticated %}
           <li> <a href="{% url 'logout'%}">Logout</a> </li>
           <li> <a href="{% url 'gym:profile'%}">Welcome {{ user.username }}</a> </li>
+          <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
         {% else %}
           <li> <a class="nav navbar-right" href="{% url 'login'%}">Login</a> </li>
         {% endif %}

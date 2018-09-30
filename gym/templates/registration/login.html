@@ -3,11 +3,12 @@
 {% block content %}
 <h1>Welcome to Login</h1>
 <form class="" action="{% url 'login' %}" method="post">
+  {% csrf_token %}
   {% if form.errors %}
   <p>Something is wrong with your login</p>
   {% endif %}
 
-  {% csrf_token %}
+
   {{ form.as_p }}
   <input type="hidden" name="next" value="{{ next }}">
   <input type="submit" name="" value="Login">

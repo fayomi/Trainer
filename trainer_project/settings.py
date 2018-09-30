@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'gym',
     'stripe',
     'cart',
+    'order',
 ]
 
 MIDDLEWARE = [
@@ -130,5 +131,5 @@ LOGIN_URL = '/login/'
 
 LOGOUT_REDIRECT_URL = '/'
 
-STRIPE_SECRET_KEY = 'xxx'
-STRIPE_PUBLISHABLE_KEY = 'xxx'
+STRIPE_SECRET_KEY = 'sk_test_EMLzJ5oruzgSGmNA3iCNFss4'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_la9mk5y5S8ZrxqQc0DiP0TS8'

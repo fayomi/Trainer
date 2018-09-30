@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block content %}
+  <h1>Order Details</h1>
+  <p>Order Number:{{ order.id }} </p>
+  <p>Order Date: {{ order.created|date:"d M Y"}}</p>
+  <p>Total Amount:{{ order.total }} </p>
+  <br>
+  {% for item in order_items%}
+  <p>Workout: {{item.workout}}</p>
+  <p>Trainer: {{item.workout.trainer.name}}</p>
+  {% endfor %}
+
+{% endblock %}
