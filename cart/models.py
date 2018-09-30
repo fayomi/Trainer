@@ -16,6 +16,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    trainer = models.CharField(max_length=250, default='none') #new addition
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 

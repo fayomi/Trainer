@@ -10,6 +10,7 @@ from django.conf import settings
 
 
 # Create your views here.
+@login_required
 def _cart_id(request):
     cart = request.session.session_key
 
@@ -17,23 +18,25 @@ def _cart_id(request):
         cart = request.session.create()
     return cart
 
+@login_required
 def add_cart(request, pk):
     workout = Workout.objects.get(pk=pk)
+    trainer = workout.trainer.name # new addition
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=_cart_id(request))
         cart.save()
     try:
-        cart_item = CartItem.objects.get(workout=workout,cart=cart)
+        cart_item = CartItem.objects.get(workout=workout,trainer=trainer,cart=cart)
         cart_item.quantity += 1
         cart_item.save()
     except CartItem.DoesNotExist:
-        cart_item = CartItem.objects.create(workout = workout,quantity = 1,cart = cart)
+        cart_item = CartItem.objects.create(workout = workout,trainer=trainer,quantity = 1,cart = cart)
         cart_item.save()
     return redirect('cart:cart_detail')
 
-
+@login_required
 def cart_detail(request, total=0, counter=0, cart_items = None):
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -80,6 +83,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
             for order_item in cart_items:
                 oi = OrderItem.objects.create(
                         workout = order_item.workout.name,
+                        trainer = order_item.workout.trainer.name,
                         quantity = order_item.quantity,
                         price = order_item.workout.price,
                         order = order_details
