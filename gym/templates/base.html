@@ -24,21 +24,16 @@
       <div class="container">
         <ul class="nav navbar-nav">
           <li> <a class="navbar-brand bigbrand" href="{% url 'gym:trainer_list'%}">Trainers</a> </li>
-          <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
-
-        </ul class="nav navbar-nav navbar-right">
-
         {% if user.is_authenticated %}
           <li> <a href="{% url 'logout'%}">Logout</a> </li>
           <li> <a href="{% url 'gym:profile'%}">Welcome {{ user.username }}</a> </li>
           <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
+          <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
         {% else %}
           <li> <a class="nav-item active" href="{% url 'gym:client_signup'%}"> Register as Client</a> </li>
           <li> <a href="{% url 'gym:trainer_signup'%}"> Register as Trainer</a> </li>
           <li> <a class="nav navbar-right" href="{% url 'login'%}">Login</a> </li>
         {% endif %}
-
-        <ul>
         </ul>
 
       </div>

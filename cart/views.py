@@ -52,6 +52,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     stripe_total = total * 100
     data_key = settings.STRIPE_PUBLISHABLE_KEY
     description = 'brand new order'
+    name = request.user.clientprofile.name #newnew
 
 
     if request.method == 'POST':
@@ -69,6 +70,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         #Now Creating the Order
         try:
             order_details = Order.objects.create(
+                    name = name, #newnew
                     token = token,
                     total = total,
                     emailAddress = email,

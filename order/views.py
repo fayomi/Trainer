@@ -11,7 +11,7 @@ def thanks(request, order_id):
     context = {'customer_order': customer_order}
     return render(request, 'order/thanks.html', context)
 
-
+#client order history
 @login_required
 def orderHistory(request):
     if request.user.is_authenticated:
@@ -30,3 +30,15 @@ def viewOrder(request, order_id):
 
     context = {'order': order, 'order_items': order_items}
     return render(request, 'order/order_detail.html', context)
+
+
+#trainer order history
+@login_required
+def trainerOrderHistory(request):
+    if request.user.is_authenticated:
+        trainer = str(request.user.trainerprofile.name)
+        trainer_order_details = OrderItem.objects.filter(trainer=trainer)
+        print(trainer_order_details)
+
+    context = {'trainer_order_details': trainer_order_details}
+    return render(request,'order/trainer_orders_list.html',context)
