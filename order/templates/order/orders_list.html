@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+  <h1>Order History </h1>
+
+  {% if order_details %}
+    {% for order in order_details %}
+    <p>Order Number:{{ order.id }} </p>
+    <p>Order Date: {{ order.created|date:"d M Y"}}</p>
+    <p>Total Amount:{{ order.total }} </p>
+    <!-- <p>Workout: {{ order.orderitem.workout}}</p> -->
+    <a href="{% url 'order:order_detail' order.id%}">View Order</a>
+    <br>
+    <br>
+    {% endfor %}
+  {% else %}
+  <h3>You have not yet placed an order</h3>
+
+  <p> please click <a href="{% url 'gym:trainer_list'%}">Here</a> to find a trainer</p>
+
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Welcome Trainer</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {{ profile_form.as_p }}
+  <input type="submit" name="" value="Register">
+
+</form>
+{% endblock %}
