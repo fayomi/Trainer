@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Base</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'gym/css/app.css' %}">
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Josefin+Slab" rel="stylesheet">
+    <!-- Specify in CSS
+    Use the following CSS rules to specify these families:
+
+    font-family: 'Abril Fatface', cursive;
+    font-family: 'Josefin Slab', serif; -->
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default techfont custom-navbar">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li> <a class="navbar-brand bigbrand" href="{% url 'gym:trainer_list'%}">Trainers</a> </li>
+        {% if user.is_authenticated %}
+          <li> <a href="{% url 'logout'%}">Logout</a> </li>
+          <li> <a href="{% url 'gym:profile'%}">Welcome {{ user.username }}</a> </li>
+          <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
+          <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
+        {% else %}
+          <li> <a class="nav-item active" href="{% url 'gym:client_signup'%}"> Register as Client</a> </li>
+          <li> <a href="{% url 'gym:trainer_signup'%}"> Register as Trainer</a> </li>
+          <li> <a class="nav navbar-right" href="{% url 'login'%}">Login</a> </li>
+        {% endif %}
+        </ul>
+
+      </div>
+
+    </nav>
+
+<!-- content -->
+<!-- make it mobile friendly with bootstrap rows -->
+    <div class="container">
+
+
+    {% block content %}
+    {% endblock %}
+
+    </div>
+
+  </body>
+</html>

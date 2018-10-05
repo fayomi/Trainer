@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+{% if not cart_items %}
+  <h1>Your shopping cart is empty</h1>
+
+  <p> please click <a href="{% url 'gym:trainer_list'%}">Here</a> to find a trainer</p>
+
+{% else %}
+  <h1>Your Shopping Cart</h1>
+
+  {% for cart_item in cart_items %}
+  <p>Trainer: {{ cart_item.workout.trainer.name }}</p>
+  <p>{{ cart_item.workout.name}}</p>
+  <p>SKU: {{ cart_item.workout.id }}</p>
+  <p>Price: £{{ cart_item.workout.price }}</p>
+  <p>quantity: {{ cart_item.quantity }} x {{ cart_item.workout.price }}</p>
+  <p>subtotal: {{ cart_item.sub_total}}</p>
+  <a class="btn btn-warning" href="{% url 'cart:cart_remove' pk=cart_item.pk %}">Delete</a> </p>
+  <br>
+  {% endfor %}
+
+  <h3>Total: £{{ total }}</h3>
+
+  <div class="container">
+    <form action="{% url 'cart:cart_detail' %}" method="POST">
+      {% csrf_token %}
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="{{ data_key }}"
+      data-amount="{{ stripe_total }}"
+      data-name="PT"
+      data-description="{{ description }}"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+      data-locale="auto"
+      data-currency="gbp">
+    </script>
+  </form>
+
+  </div>
+
+
+
+{% endif %}
+
+{% endblock%}

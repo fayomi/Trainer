@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<h1>Thanks for placing your Order</h1>
+<p>Your order number is: <b>{{ customer_order.id }}</b> </p> <br>
+<p>We have recieved your order and will begin processing. For your records, an email confirmation has been sent to you.
+It contains details of the items you purchased</p>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_trainer == True %}
+    <h1>Welcome Trainer: {{ user.username }}</h1>
+  {% else %}
+    <h1>Welcome Client: {{ user.username }}</h1>
+  {% endif %}
+{% endblock %}
