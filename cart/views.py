@@ -54,7 +54,6 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     stripe_total = total * 100
     data_key = settings.STRIPE_PUBLISHABLE_KEY
-    description = cart_item.workout.name
     name = request.user.clientprofile.name #newnew
 
 
@@ -64,6 +63,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         token = request.POST['stripeToken']
         email = request.POST['stripeEmail']
         trainer_id=cart_item.workout.trainer.stripe_id
+        description = cart_item.workout.name
         # description = cart_item.workout.name
 
 
@@ -98,6 +98,10 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
             return redirect('order:thanks', order_details.id)
         except ObjectDoesNotExist:
             pass
+
+    else:
+        trainer_id = ''
+        description = ''
 
 
     context = {'data_key': data_key,'description':description,'cart_items': cart_items, 'total': total,'stripe_total': stripe_total, 'counter': counter}
