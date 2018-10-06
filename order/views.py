@@ -37,7 +37,7 @@ def viewOrder(request, order_id):
 def trainerOrderHistory(request):
     if request.user.is_authenticated:
         trainer = str(request.user.trainerprofile.name)
-        trainer_order_details = OrderItem.objects.filter(trainer=trainer)
+        trainer_order_details = Order.objects.filter(orderitem__trainer=trainer)
         print(trainer_order_details)
 
     context = {'trainer_order_details': trainer_order_details}
