@@ -98,17 +98,10 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
             return redirect('order:thanks', order_details.id)
         except ObjectDoesNotExist:
             pass
-<<<<<<< HEAD
 
     else:
         trainer_id = ''
         description = ''
-
-=======
-    else:
-        trainer_id = ''
-        description = ''
->>>>>>> a256634ac3289aa88619b937acc6862fcc63e88d
 
     context = {'data_key': data_key,'description':description,'cart_items': cart_items, 'total': total,'stripe_total': stripe_total, 'counter': counter}
     return render(request,'cart/cart.html', context)
