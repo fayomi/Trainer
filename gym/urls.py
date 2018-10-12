@@ -6,6 +6,7 @@ urlpatterns = [
     path('',views.TrainerListView.as_view(),name='trainer_list'),
     path('profile/', views.ProfileView.as_view(),name='profile'),
     path('trainer_register/',views.trainerRegister, name='trainer_signup'),
+    path('stripe_form/',views.stripeForm, name='stripe_form'),
     path('client_register/',views.clientRegister, name='client_signup'),
     path('trainers/<pk>/',views.TrainerDetailView.as_view(),name='trainer_detail'),
     # path('create/',views.WorkoutCreateView.as_view(),name='workout_create'),

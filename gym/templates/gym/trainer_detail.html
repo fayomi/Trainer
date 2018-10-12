@@ -31,7 +31,6 @@
 <div class="container">
   <p> <a class="btn btn-success" href="{% url 'gym:addWorkout' pk=trainer_detail.pk %}">Add New Workout</a> </p>
   <p> <a class="btn btn-success" href="{% url 'gym:trainer_update' pk=trainer_detail.pk %}">Update Profile</a> </p>
-  <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_Dht99lrMkYqjCsNZRHznzbcyhCfRzIUm&scope=read_write">Stripe</a>
 </div>
 <!-- this is the view if the user is a client -->
   {% else %}

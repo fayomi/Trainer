@@ -6,7 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import User,TrainerProfile, Workout, ClientProfile
 
+import requests
+from django.conf import settings
 
+CLIENT_ID = 'ca_Dht99lrMkYqjCsNZRHznzbcyhCfRzIUm'
+STRIPE_TOKEN_URL = 'https://connect.stripe.com/oauth/token'
+CLIENT_SECRET = settings.STRIPE_SECRET_KEY
 
 
 # Create your views here.
@@ -88,13 +93,37 @@ def trainerRegister(request):
             user = authenticate(username=username, password=password)
             login(request, user)
 
-            return redirect('/')
+            return redirect('gym:stripe_form')
     else:
         form = TrainerSignUpForm()
         profile_form = TrainerProfileForm()
 
     context = {'form': form, 'profile_form': profile_form}
     return render(request,'registration/trainer_signup_form.html', context)
+
+
+def stripeForm(request):
+
+    url = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_Dht99lrMkYqjCsNZRHznzbcyhCfRzIUm&scope=read_write'
+
+    user = request.user
+
+    code = request.GET.get('code')
+    # print('new',code)
+    data = {'client_secret': CLIENT_SECRET,'code': code,'grant_type':'authorization_code'}
+    r = requests.post(STRIPE_TOKEN_URL, data=data)
+    json_data =  r.json()
+
+    try:
+        id = json_data['stripe_user_id']
+        user.trainerprofile.stripe_id = id
+        user.trainerprofile.save()
+        return redirect('/')
+    except:
+        pass
+
+    context = {'url':url}
+    return render(request, 'registration/stripeform.html', context)
 
 
 def clientRegister(request):
