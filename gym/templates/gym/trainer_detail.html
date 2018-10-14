@@ -12,8 +12,8 @@
 
   <h2>Workouts</h2>
 
-<!-- this is the view if the user is a trainer -->
-  {% if user.is_trainer %}
+<!-- this is the view if the user is a trainer viewing their own detail page-->
+  {% if user.trainerprofile.pk == trainer_detail.pk %}
   <form action="{% url 'gym:trainer_detail' pk=trainer_detail.pk %}" method="POST">
     {% csrf_token %}
     {% for workout in trainer_detail.workouts.all %}
