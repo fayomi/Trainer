@@ -104,7 +104,7 @@ def trainerRegister(request):
 
 def stripeForm(request):
 
-    url = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_Dht99lrMkYqjCsNZRHznzbcyhCfRzIUm&scope=read_write'
+    url = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id={}&scope=read_write'.format(CLIENT_ID)
 
     user = request.user
 

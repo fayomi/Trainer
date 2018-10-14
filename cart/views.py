@@ -69,7 +69,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
 
 
         # customer = stripe.Customer.create(email=email,source=token)
-        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=2000,stripe_account=trainer_id)
+        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=300,stripe_account=trainer_id)
 
         #Now Creating the Order
         try:
