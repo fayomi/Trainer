@@ -40,11 +40,11 @@ class TrainerUpdateView(LoginRequiredMixin,UpdateView):
 class WorkoutCreateView(LoginRequiredMixin,CreateView):
 
     model = Workout
-    fields = ('trainer','name','price')
+    fields = ('trainer','name','price','sessions')
 
 class WorkoutUpdateView(LoginRequiredMixin,UpdateView):
     model = Workout
-    fields = ('name','price')
+    fields = ('name','price','sessions')
 
 
 @login_required

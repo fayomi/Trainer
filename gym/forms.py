@@ -43,4 +43,4 @@ class ClientProfileForm(forms.ModelForm):
 class WorkoutForm(forms.ModelForm):
     class Meta:
         model = Workout
-        fields = ('name','price')
+        fields = ('name','price','sessions')

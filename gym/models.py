@@ -46,6 +46,7 @@ class Workout(models.Model):
     trainer = models.ForeignKey(TrainerProfile,on_delete=models.CASCADE ,related_name='workouts')
     name = models.CharField(max_length=200,null=True)
     price = models.IntegerField()
+    sessions = models.IntegerField(default=0)
 
     def get_absolute_url(self):
         return reverse('gym:trainer_detail', kwargs={'pk':self.pk})

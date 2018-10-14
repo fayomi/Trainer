@@ -85,6 +85,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
             for order_item in cart_items:
                 oi = OrderItem.objects.create(
                         workout = order_item.workout.name,
+                        sessions = order_item.workout.sessions,
                         trainer = order_item.workout.trainer.name,
                         quantity = order_item.quantity,
                         price = order_item.workout.price,
@@ -94,6 +95,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                 oi.save()
                 # the terminal will print confirmation
                 print('order has been created')
+                
 
             return redirect('order:thanks', order_details.id)
         except ObjectDoesNotExist:

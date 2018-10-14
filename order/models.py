@@ -19,6 +19,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     workout = models.CharField(max_length=250)
+    sessions = models.IntegerField(default=0)
     trainer = models.CharField(max_length=250, default='none') #new addition
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Price')
