@@ -129,7 +129,7 @@ def stripeForm(request):
 def clientRegister(request):
     if request.method == 'POST':
         form = ClientSignUpForm(request.POST)
-        profile_form = ClientProfileForm(request.POST)
+        profile_form = ClientProfileForm(request.POST, request.FILES)
 
         if form.is_valid() and profile_form.is_valid():
             user = form.save()

@@ -5,5 +5,9 @@
     <h1>Welcome Trainer: {{ user.username }}</h1>
   {% else %}
     <h1>Welcome Client: {{ user.username }}</h1>
+    {% if user.clientprofile.profile_img %}
+      <img src="{{user.clientprofile.profile_img.url}}" width="240" alt="No Image">
+
+    {% endif %}
   {% endif %}
 {% endblock %}
