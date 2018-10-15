@@ -27,8 +27,14 @@
         {% if user.is_authenticated %}
           <li> <a href="{% url 'logout'%}">Logout</a> </li>
           <li> <a href="{% url 'gym:profile'%}">Welcome {{ user.username }}</a> </li>
-          <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
           <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
+          {% if user.is_trainer %}
+            <li> <a href="{% url 'order:trainer_order_history'%}">Order Hstory</a> </li>
+          
+          {% else %}
+            <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
+
+          {% endif %}
         {% else %}
           <li> <a class="nav-item active" href="{% url 'gym:client_signup'%}"> Register as Client</a> </li>
           <li> <a href="{% url 'gym:trainer_signup'%}"> Register as Trainer</a> </li>
