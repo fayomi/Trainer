@@ -5,14 +5,17 @@ from .models import TrainerProfile, User, ClientProfile, Workout
 
 
 class TrainerSignUpForm(UserCreationForm):
+
+    email = forms.EmailField(required=True)
     class Meta:
         model = User
-        fields = ('username','password1','password2')
+        fields = ('username','email','password1','password2')
 
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
         user.is_trainer = True
+        user.email = self.cleaned_data['email']
         user.save()
         trainer = TrainerProfile.objects.create(user=user)
         return user
@@ -23,9 +26,10 @@ class TrainerProfileForm(forms.ModelForm):
         fields = ('name','description','gender','age','location','skills','profile_img')
 
 class ClientSignUpForm(UserCreationForm):
+    email = forms.EmailField(required=True)
     class Meta:
         model = User
-        fields = ('username','password1','password2')
+        fields = ('username','email','password1','password2')
 
     @transaction.atomic
     def save(self):
@@ -36,6 +40,7 @@ class ClientSignUpForm(UserCreationForm):
         return user
 
 class ClientProfileForm(forms.ModelForm):
+
     class Meta:
         model = ClientProfile
         fields = ('name','goals','gender','age','location','profile_img')
