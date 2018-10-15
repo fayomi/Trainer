@@ -125,6 +125,9 @@ AUTH_USER_MODEL = 'gym.User'
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'gym/media')
+
 LOGIN_REDIRECT_URL = '/'
 
 LOGIN_URL = '/login/'

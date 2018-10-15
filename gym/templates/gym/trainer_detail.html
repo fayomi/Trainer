@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content%}
 <div class="jumbotron">
   <h2>Trainer Details: </h2>
+  {% if trainer_detail.profile_img %}
+    <img src="{{trainer_detail.profile_img.url}}" width="240" alt="No Image">
+
+  {% endif %}
+
   <p>Name: {{trainer_detail.user.username }}</p>
   <p>Description: {{trainer_detail.description}}</p>
   <p>Age: {{ trainer_detail.age }}</p>

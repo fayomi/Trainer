@@ -79,7 +79,7 @@ def deleteWorkout(request,pk):
 def trainerRegister(request):
     if request.method == 'POST':
         form = TrainerSignUpForm(request.POST)
-        profile_form = TrainerProfileForm(request.POST)
+        profile_form = TrainerProfileForm(request.POST, request.FILES)
 
         if form.is_valid() and profile_form.is_valid():
             user = form.save()
