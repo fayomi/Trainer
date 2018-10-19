@@ -44,7 +44,7 @@ class WorkoutCreateView(LoginRequiredMixin,CreateView):
 
 class WorkoutUpdateView(LoginRequiredMixin,UpdateView):
     model = Workout
-    fields = ('name','price','sessions')
+    fields = ('name','price','sessions','workout_description')
 
 
 @login_required

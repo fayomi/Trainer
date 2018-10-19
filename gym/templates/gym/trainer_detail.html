@@ -23,7 +23,11 @@
   <form action="{% url 'gym:trainer_detail' pk=trainer_detail.pk %}" method="POST">
     {% csrf_token %}
     {% for workout in trainer_detail.workouts.all %}
-    {{ workout.name }}: Number of Sessions per month: {{workout.sessions }}: £{{ workout.price }}
+    {{ workout.name }}: £{{ workout.price }}
+    <br>
+    Number of Sessions per month: {{workout.sessions }}
+    <br>
+    Description: {{ workout.workout_description}}
     <input type="radio" name="workout" value="{{ workout.price }}">
     <p> <a class="btn btn-warning" href="{% url 'gym:workout_update' pk=workout.pk %}">Update</a>  <a class="btn btn-warning" href="{% url 'gym:workout_remove' pk=workout.pk %}">Delete</a> </p>
 
