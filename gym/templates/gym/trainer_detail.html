@@ -48,7 +48,11 @@
     {% csrf_token %}
 
     {% for workout in trainer_detail.workouts.all %}
-    {{ workout.name }}: Number of Sessions per month: {{workout.sessions }}: £{{ workout.price }}
+    {{ workout.name }}: £{{ workout.price }}
+    <br>
+    Number of Sessions per month: {{workout.sessions }}
+    <br>
+    Description: {{ workout.workout_description}}
     <a class="btn btn-primary" href="{% url 'cart:add_cart' pk=workout.pk %}">Add To Cart</a>
     <br>
 

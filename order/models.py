@@ -24,6 +24,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Price')
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
+    workout_description = models.TextField(default='There is no description available')
 
     class Meta:
         db_table = 'OrderItem'

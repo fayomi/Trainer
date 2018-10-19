@@ -62,14 +62,14 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     if request.method == 'POST':
         token = request.POST['stripeToken']
         email = request.POST['stripeEmail']
-        trainer_id=cart_item.workout.trainer.stripe_id
+        trainer_stripe_id=cart_item.workout.trainer.stripe_id
         description = cart_item.workout.name
         # description = cart_item.workout.name
 
 
 
         # customer = stripe.Customer.create(email=email,source=token)
-        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=300,stripe_account=trainer_id)
+        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=300,stripe_account=trainer_stripe_id)
 
         #Now Creating the Order
         try:
@@ -89,20 +89,21 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                         trainer = order_item.workout.trainer.name,
                         quantity = order_item.quantity,
                         price = order_item.workout.price,
-                        order = order_details
+                        order = order_details,
+                        workout_description = order_item.workout.workout_description,
 
                 )
                 oi.save()
                 # the terminal will print confirmation
                 print('order has been created')
-                
+
 
             return redirect('order:thanks', order_details.id)
         except ObjectDoesNotExist:
             pass
 
     else:
-        trainer_id = ''
+        trainer_stripe_id = ''
         description = ''
 
     context = {'data_key': data_key,'description':description,'cart_items': cart_items, 'total': total,'stripe_total': stripe_total, 'counter': counter}
