@@ -55,6 +55,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     stripe_total = total * 100
     data_key = settings.STRIPE_PUBLISHABLE_KEY
     name = request.user.clientprofile.name #newnew
+    client_id = request.user.id
+    client_email = request.user.email
 
 
 
@@ -69,15 +71,15 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
 
 
         # customer = stripe.Customer.create(email=email,source=token)
-        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=300,stripe_account=trainer_stripe_id)
+        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=200,stripe_account=trainer_stripe_id)
 
         #Now Creating the Order
         try:
             order_details = Order.objects.create(
-                    name = name, #newnew
+                    client_name = name, #newnew
                     token = token,
                     total = total,
-                    emailAddress = email,
+                    emailAddress = client_email,
 
             )
             order_details.save()
@@ -87,6 +89,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                         workout = order_item.workout.name,
                         sessions = order_item.workout.sessions,
                         trainer = order_item.workout.trainer.name,
+                        trainer_id = order_item.workout.trainer.user.id,
+                        client_id = client_id,
                         quantity = order_item.quantity,
                         price = order_item.workout.price,
                         order = order_details,

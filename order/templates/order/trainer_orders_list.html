@@ -8,7 +8,7 @@
 
   {% if trainer_order_details %}
     {% for order in trainer_order_details %}
-    <p>Customer Name: {{ order.name}}</p>
+    <p>Customer Name: {{ order.client_name}}</p>
     <p>Order Number:{{ order.id }} </p>
     <p>Order Date: {{ order.created|date:"d M Y"}}</p>
     <p>Total Amount:{{ order.total }} </p>
