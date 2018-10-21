@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'stripe',
     'cart',
     'order',
+    'session',
 ]
 
 MIDDLEWARE = [

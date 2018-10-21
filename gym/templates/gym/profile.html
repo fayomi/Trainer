@@ -7,7 +7,21 @@
     <h1>Welcome Client: {{ user.username }}</h1>
     {% if user.clientprofile.profile_img %}
       <img src="{{user.clientprofile.profile_img.url}}" width="240" alt="No Image">
-
     {% endif %}
+    <h2>Sessions</h2>
+    <p>get the most recent order id</p>
+    <p>model to have available sessions, normal sessions, date, status</p>
+    <p>if button is pushed, status is changed from unused to pending, second button appears in trainer</p>
+    <p>if button is accepted, status is changed to completed</p>
+    <p>when status is changed to completed new object of AvailableSession is created, status changed back to available</p>
+    <p>when availble sessions reaches zero sessions is filed away</p>
+    <br>
+    <br>
+    <br>
+    <p>Your newest order is: {{ session.order_id }}</p>
+    <p>You have: {{ session.availablesession.available_sessions }}</p>
+
+
+
   {% endif %}
 {% endblock %}

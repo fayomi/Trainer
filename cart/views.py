@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from gym.models import Workout
 from order.models import Order, OrderItem
+from session.models import Session, AvailableSession
 from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import (View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView)
@@ -124,6 +125,23 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                 oi.save()
                 # the terminal will print confirmation
                 print('order has been created')
+
+            # to get the sessions
+            session_details = Session.objects.create(
+                        client_id = client_id,
+                        trainer_id = cart_item.workout.trainer.user.id,
+                        order = order_details,
+                        total_sessions = cart_item.workout.sessions,
+                        workout_name = cart_item.workout.name
+            )
+            session_details.save()
+
+            for available_session in cart_items:
+                a_s = AvailableSession.objects.create(
+                        session = session_details,
+                        available_sessions = available_session.workout.sessions,
+                )
+                a_s.save()
 
 
             return redirect('order:thanks', order_details.id)

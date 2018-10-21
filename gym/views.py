@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404,HttpResponse
+from django.http import Http404
 from django.views.generic import (View,TemplateView,ListView,DetailView,CreateView,UpdateView,DeleteView)
 from .forms import TrainerSignUpForm, TrainerProfileForm,ClientSignUpForm,ClientProfileForm,WorkoutForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import User,TrainerProfile, Workout, ClientProfile
+from session.models import Session, AvailableSession
 
 import requests
 from django.conf import settings
@@ -16,8 +18,38 @@ CLIENT_SECRET = settings.STRIPE_SECRET_KEY
 
 # Create your views here.
 # @login_required
-class ProfileView(LoginRequiredMixin,TemplateView):
-    template_name = 'gym/profile.html'
+# class ProfileView(LoginRequiredMixin,TemplateView):
+#     # user_id = request.user.id
+#     template_name = 'gym/profile.html'
+#
+#     user_id = self.request.user
+#     print(user_id)
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(ProfileView, self).get_context_data(**kwargs)
+#         context['session'] = Session.objects.get(client_id=user_id)
+#         print(context['session'])
+#         # context['availablesession'] = AvailableSession.objects.get()
+#         return context
+
+@login_required
+def profileView(request):
+    user_id = request.user.id
+
+    session_filter = Session.objects.filter(client_id=user_id).order_by('-id')
+    session = session_filter[0]
+    session_id = session.id
+    print(session.id)
+
+    available = AvailableSession.objects.filter(session__id=session_id)
+    for a in available:
+        print(a.date)
+        print(a.available_sessions)
+
+
+    context = {'session': session}
+    return render(request,'gym/profile.html', context)
+
 
 class TrainerListView(ListView):
     context_object_name = 'trainers'
