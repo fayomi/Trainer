@@ -36,9 +36,9 @@ def viewOrder(request, order_id):
 @login_required
 def trainerOrderHistory(request):
     if request.user.is_authenticated:
-        trainer = str(request.user.trainerprofile.name)
-        trainer_order_details = Order.objects.filter(orderitem__trainer=trainer)
-        print(trainer_order_details)
-
-    context = {'trainer_order_details': trainer_order_details}
+        trainer_id = str(request.user.id)
+        trainer_orders = OrderItem.objects.filter(trainer_id=trainer_id)
+        print(trainer_orders)
+                    
+    context = {'trainer_orders':trainer_orders}
     return render(request,'order/trainer_orders_list.html',context)
