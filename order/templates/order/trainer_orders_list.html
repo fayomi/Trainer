@@ -13,9 +13,12 @@
     <p>Customer Name: {{ order.order.client_name}}</p>
     <p>Order Number:{{ order.id }} </p>
     <p>Order Date: {{ order.order.created|date:"d M Y"}}</p>
-    <p>Total Amount:{{ order.order.total }} </p>
+
     <p>Customer email: {{ order.order.emailAddress}}</p>
     <p>Number of sessions: {{ order.sessions }}</p>
+    <p>Gross Amount:{{ order.order.total }} </p>
+    <p>Service Fee: {{ order.order.service_fee }}</p>
+    <p>Net Pay:{{ order.order.net_pay }} </p>
 
     <a href="#">View Order</a>
     <br>

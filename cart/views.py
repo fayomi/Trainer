@@ -8,6 +8,19 @@ from django.contrib.auth.decorators import login_required
 import stripe
 from django.conf import settings
 
+platform_fee = 2 #aso remember to change in stripe application_fee if updated
+
+
+def stripeFeeCalculator(total):
+    percentage = (1.4/100) * total
+    final = percentage + 0.2
+    return final
+
+def netCalculator(total, stripe_fee, platform_fee):
+    net = total - stripe_fee - platform_fee
+    return net
+
+
 
 # Create your views here.
 @login_required
@@ -58,6 +71,13 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     client_id = request.user.id
     client_email = request.user.email
 
+    # to calculate the net pay
+    stripe_fee = stripeFeeCalculator(total)
+    service_fee = stripe_fee + platform_fee
+    net_pay = netCalculator(total, stripe_fee, platform_fee)
+
+
+
 
 
 
@@ -79,6 +99,10 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                     client_name = name, #newnew
                     token = token,
                     total = total,
+                    stripe_fee = stripe_fee,
+                    platform_fee = platform_fee,
+                    service_fee = service_fee,
+                    net_pay = net_pay,
                     emailAddress = client_email,
 
             )

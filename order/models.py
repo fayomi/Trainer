@@ -5,7 +5,11 @@ class Order(models.Model):
     #this will take information from the stripe form
     client_name = models.CharField(max_length=250, default='none') #newnew
     token = models.CharField(max_length=250,blank=True)
-    total = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Order Total')
+    total = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Order Gross Total')
+    net_pay = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Order Net Total', default=0.00)
+    stripe_fee = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='Stripe Fee', default=0.00)
+    platform_fee = models.IntegerField(default=2)
+    service_fee = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='Total Service Fee', default=0.00)
     emailAddress = models.EmailField(max_length=250,blank=True,verbose_name='Email Address')
     created = models.DateTimeField(auto_now_add=True)
 
@@ -30,6 +34,7 @@ class OrderItem(models.Model):
 
     class Meta:
         db_table = 'OrderItem'
+        ordering = ['-id'] #to have the most recent order come up first
 
     def sub_total(self):
         return self.quantity * self.price
