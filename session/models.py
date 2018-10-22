@@ -8,7 +8,7 @@ class Session(models.Model):
     client_id = models.CharField(max_length=250, default='none')
     trainer_id = models.CharField(max_length=250, default='none')
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
-    total_sessions = models.IntegerField(default=0)
+    total_sessions = models.PositiveIntegerField(default=0)
     workout_name = models.CharField(max_length=250)
     status = models.CharField(max_length=250, default='available')
     # if status is completed it creates a new object of available session(1-total sessions) with updated time
@@ -21,7 +21,7 @@ class Session(models.Model):
 
 class AvailableSession(models.Model):
     session = models.ForeignKey(Session,on_delete=models.CASCADE)
-    available_sessions = models.IntegerField(default=0)
+    available_sessions = models.PositiveIntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

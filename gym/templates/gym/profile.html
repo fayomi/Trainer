@@ -19,8 +19,14 @@
     <br>
     <br>
     <p>Your newest order is: {{ session.order_id }}</p>
-    <p>You have: {{ session.availablesession.available_sessions }}</p>
+    {% for a in available %}
+    <p>You have: {{ a.available_sessions }} available sessions</p>
+    <!-- <p> Used on {{ a.date }} </p> -->
 
+    {% endfor %}
+    <form method="get">
+    <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
+    </form>
 
 
   {% endif %}

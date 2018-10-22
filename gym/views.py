@@ -16,38 +16,72 @@ STRIPE_TOKEN_URL = 'https://connect.stripe.com/oauth/token'
 CLIENT_SECRET = settings.STRIPE_SECRET_KEY
 
 
-# Create your views here.
-# @login_required
-# class ProfileView(LoginRequiredMixin,TemplateView):
-#     # user_id = request.user.id
-#     template_name = 'gym/profile.html'
-#
-#     user_id = self.request.user
-#     print(user_id)
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(ProfileView, self).get_context_data(**kwargs)
-#         context['session'] = Session.objects.get(client_id=user_id)
-#         print(context['session'])
-#         # context['availablesession'] = AvailableSession.objects.get()
-#         return context
 
 @login_required
 def profileView(request):
     user_id = request.user.id
 
+    # this filters the most recent order
     session_filter = Session.objects.filter(client_id=user_id).order_by('-id')
     session = session_filter[0]
     session_id = session.id
-    print(session.id)
+    print(session.status)
 
+    # this shows how many availbale session there are
     available = AvailableSession.objects.filter(session__id=session_id)
     for a in available:
         print(a.date)
-        print(a.available_sessions)
+        # print(a.available_sessions)
+
+    # function to change status from 'available' to 'completed'
+    # abstract it to if button is pressed, change status
 
 
-    context = {'session': session}
+    def statusChange():
+        # print(x)
+        session.status = 'completed'
+        session.save()
+
+    # this then creates a new available session
+
+    def createAvailabeSession():
+        available_session = a.available_sessions
+
+
+        if session.status == 'completed' and available_session >= 1:
+            available_session -= 1
+            new_session = available_session
+
+
+            if session.status == 'completed':
+                a_s = AvailableSession.objects.create(
+                        session = session,
+                        available_sessions = new_session
+                        )
+                a_s.save()
+                print(available_session)
+                session.status = 'available'
+                session.save()
+
+        else:
+            print('yu have no more workouts')
+
+    if (request.GET.get('use_session')):
+        statusChange()
+        createAvailabeSession()
+    else:
+        print('nothing to see here')
+        pass
+
+
+
+
+
+
+
+
+
+    context = {'session': session, 'available': available}
     return render(request,'gym/profile.html', context)
 
 

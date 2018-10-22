@@ -46,7 +46,7 @@ class Workout(models.Model):
     trainer = models.ForeignKey(TrainerProfile,on_delete=models.CASCADE ,related_name='workouts')
     name = models.CharField(max_length=200,null=True)
     price = models.IntegerField()
-    sessions = models.IntegerField(default=0)
+    sessions = models.PositiveIntegerField(default=0)
     workout_description = models.TextField(default='There is no description available')
 
     def get_absolute_url(self):

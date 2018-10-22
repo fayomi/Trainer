@@ -5,6 +5,7 @@ app_name = 'gym'
 urlpatterns = [
     path('',views.TrainerListView.as_view(),name='trainer_list'),
     path('profile/', views.profileView,name='profile'),
+    # path('profile/', views.profileView.statusChange,name='status'),
     path('trainer_register/',views.trainerRegister, name='trainer_signup'),
     path('stripe_form/',views.stripeForm, name='stripe_form'),
     path('client_register/',views.clientRegister, name='client_signup'),
