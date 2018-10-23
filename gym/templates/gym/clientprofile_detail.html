@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% if user.is_client == True %}
+
+
+    <h1>Welcome Client: {{ user.username }}</h1>
+    {% if user.clientprofile.profile_img %}
+      <img src="{{user.clientprofile.profile_img.url}}" width="240" alt="No Image">
+    {% endif %}
+    <h2>Sessions</h2>
+    <p>get the most recent order id</p>
+    <p>model to have available sessions, normal sessions, date, status</p>
+    <p>if button is pushed, status is changed from unused to pending, second button appears in trainer</p>
+    <p>if button is accepted, status is changed to completed</p>
+    <p>when status is changed to completed new object of AvailableSession is created, status changed back to available</p>
+    <p>when availble sessions reaches zero sessions is filed away</p>
+    <br>
+    <br>
+    <br>
+    <p>Your newest order is: {{ session.order_id }} from {{ session.order.trainer_name}}</p>
+    {% for a in available %}
+    <p>You have: {{ a.available_sessions }} available sessions. last used: {{ a.date }}</p>
+    {% endfor %}
+    <form method="get">
+    <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
+    </form>
+    <br>
+    <br>
+    <p> <a class="btn btn-success" href="{% url 'gym:client_update' pk=user.pk %}">Update Profile</a> </p>
+
+  {% else %}
+  <p>You are not a client</p>
+
+  {% endif %}
+
+
+{% endblock %}

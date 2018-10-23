@@ -18,7 +18,7 @@ CLIENT_SECRET = settings.STRIPE_SECRET_KEY
 
 
 @login_required
-def clientProfileView(request):
+def clientProfileView(request, pk):
 
 
     user_id = request.user.id
@@ -73,13 +73,14 @@ def clientProfileView(request):
     if (request.GET.get('use_session')):
         statusChange()
         createAvailabeSession()
-        return redirect('/client_profile/') #move to pending page
+        return redirect('gym:client_profile',pk=user_id) #move to pending page
     else: # probably change status to complete
         print('nothing to see here')
         pass
 
+    print(user_id)
     context = {'session': session, 'available': available}
-    return render(request,'gym/client_profile.html', context)
+    return render(request, 'gym/clientprofile_detail.html', context)
 
 
 @login_required
@@ -127,7 +128,11 @@ class TrainerDetailView(DetailView):
     model = TrainerProfile
     template_name = 'gym/trainer_detail.html'
 
+class ClientDetailView(DetailView):
+    context_object_name = 'client_detail'
 
+    model = ClientProfile
+    # template_name = 'gym/client_profile.html'
 
 
 
@@ -143,6 +148,10 @@ class WorkoutCreateView(LoginRequiredMixin,CreateView):
 class WorkoutUpdateView(LoginRequiredMixin,UpdateView):
     model = Workout
     fields = ('name','price','sessions','workout_description')
+
+class ClientUpdateView(LoginRequiredMixin,UpdateView):
+    model = ClientProfile
+    fields = ('profile_img','name','location','phone')
 
 
 @login_required

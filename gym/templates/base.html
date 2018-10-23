@@ -29,7 +29,7 @@
           {% if user.is_trainer == True %}
             <li> <a href="{% url 'gym:trainer_profile'%}">Welcome Trainer {{ user.username }}</a> </li>
           {% else %}
-            <li> <a href="{% url 'gym:client_profile'%}">Welcome {{ user.username }}</a> </li>
+            <li> <a href="{% url 'gym:client_profile' pk=user.pk%}">Welcome {{ user.username }}</a> </li>
           {% endif %}
 
           <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
