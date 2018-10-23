@@ -15,6 +15,7 @@ class TrainerProfile(models.Model):
     name = models.CharField(max_length=100,null=True)
     description = models.TextField()
     age = models.PositiveIntegerField(null=True)
+    phone = models.CharField(max_length=30,null=True)
     gender = models.CharField(max_length=30,null=True)
     location = models.CharField(max_length=30,null=True)
     skills = models.CharField(max_length=30,null=True)
@@ -33,6 +34,7 @@ class ClientProfile(models.Model):
     goals = models.CharField(max_length=30,null=True)
     age = models.PositiveIntegerField(null=True)
     gender = models.CharField(max_length=30,null=True)
+    phone = models.CharField(max_length=30,null=True)
     location = models.CharField(max_length=30,null=True)
     profile_img = models.ImageField(upload_to='profile_image', blank=True)
 

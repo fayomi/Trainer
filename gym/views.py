@@ -133,7 +133,7 @@ class TrainerDetailView(DetailView):
 
 class TrainerUpdateView(LoginRequiredMixin,UpdateView):
     model = TrainerProfile
-    fields = ('profile_img','skills','location')
+    fields = ('profile_img','skills','location','phone')
 
 class WorkoutCreateView(LoginRequiredMixin,CreateView):
 

@@ -23,7 +23,7 @@ class TrainerSignUpForm(UserCreationForm):
 class TrainerProfileForm(forms.ModelForm):
     class Meta:
         model = TrainerProfile
-        fields = ('name','description','gender','age','location','skills','profile_img')
+        fields = ('name','description','gender','age','phone','location','skills','profile_img')
 
 class ClientSignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -43,7 +43,7 @@ class ClientProfileForm(forms.ModelForm):
 
     class Meta:
         model = ClientProfile
-        fields = ('name','goals','gender','age','location','profile_img')
+        fields = ('name','goals','gender','age','phone','location','profile_img')
 
 class WorkoutForm(forms.ModelForm):
     class Meta:
