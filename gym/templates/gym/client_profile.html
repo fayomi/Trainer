@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  {% if user.is_trainer == True %}
-    <h1>Welcome Trainer: {{ user.username }}</h1>
-  {% else %}
+
+  {% if user.is_client == True %}
+
+
     <h1>Welcome Client: {{ user.username }}</h1>
     {% if user.clientprofile.profile_img %}
       <img src="{{user.clientprofile.profile_img.url}}" width="240" alt="No Image">
@@ -18,16 +19,18 @@
     <br>
     <br>
     <br>
-    <p>Your newest order is: {{ session.order_id }}</p>
+    <p>Your newest order is: {{ session.order_id }} from {{ session.order.trainer_name}}</p>
     {% for a in available %}
-    <p>You have: {{ a.available_sessions }} available sessions</p>
-    <!-- <p> Used on {{ a.date }} </p> -->
-
+    <p>You have: {{ a.available_sessions }} available sessions. last used: {{ a.date }}</p>
     {% endfor %}
     <form method="get">
     <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
     </form>
 
+  {% else %}
+  <p>You are not a client</p>
 
   {% endif %}
+
+
 {% endblock %}

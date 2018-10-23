@@ -68,7 +68,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     stripe_total = total * 100
     data_key = settings.STRIPE_PUBLISHABLE_KEY
-    name = request.user.clientprofile.name #newnew
+    client_name = request.user.clientprofile.name #newnew
     client_id = request.user.id
     client_email = request.user.email
 
@@ -86,6 +86,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         token = request.POST['stripeToken']
         email = request.POST['stripeEmail']
         trainer_stripe_id=cart_item.workout.trainer.stripe_id
+        trainer_name = cart_item.workout.trainer.name
         description = cart_item.workout.name
         # description = cart_item.workout.name
 
@@ -97,7 +98,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         #Now Creating the Order
         try:
             order_details = Order.objects.create(
-                    client_name = name, #newnew
+                    client_name = client_name,
+                    trainer_name = trainer_name,
                     token = token,
                     total = total,
                     stripe_fee = stripe_fee,
@@ -113,7 +115,6 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                 oi = OrderItem.objects.create(
                         workout = order_item.workout.name,
                         sessions = order_item.workout.sessions,
-                        trainer = order_item.workout.trainer.name,
                         trainer_id = order_item.workout.trainer.user.id,
                         client_id = client_id,
                         quantity = order_item.quantity,

@@ -10,7 +10,7 @@
   <br>
   {% for item in order_items%}
   <p>Workout: {{item.workout}}</p>
-  <p>Trainer: {{item.trainer}}</p>
+  <p>Trainer: {{item.order.trainer_name}}</p>
   <p>Quantity: {{item.quantity}}</p>
   <p>Price: {{item.price}}</p>
   <p>Sessions: {{item.sessions}}</p>

@@ -4,7 +4,9 @@ from . import views
 app_name = 'gym'
 urlpatterns = [
     path('',views.TrainerListView.as_view(),name='trainer_list'),
-    path('profile/', views.profileView,name='profile'),
+    path('client_profile/', views.clientProfileView,name='client_profile'),
+    path('trainer_profile/', views.trainerProfileView,name='trainer_profile'),
+    path('client_pending/', views.clientPendingView,name='client_pending'),
     # path('profile/', views.profileView.statusChange,name='status'),
     path('trainer_register/',views.trainerRegister, name='trainer_signup'),
     path('stripe_form/',views.stripeForm, name='stripe_form'),

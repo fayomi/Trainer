@@ -26,11 +26,16 @@
           <li> <a class="navbar-brand bigbrand" href="{% url 'gym:trainer_list'%}">Trainers</a> </li>
         {% if user.is_authenticated %}
           <li> <a href="{% url 'logout'%}">Logout</a> </li>
-          <li> <a href="{% url 'gym:profile'%}">Welcome {{ user.username }}</a> </li>
+          {% if user.is_trainer == True %}
+            <li> <a href="{% url 'gym:trainer_profile'%}">Welcome Trainer {{ user.username }}</a> </li>
+          {% else %}
+            <li> <a href="{% url 'gym:client_profile'%}">Welcome {{ user.username }}</a> </li>
+          {% endif %}
+
           <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
           {% if user.is_trainer %}
             <li> <a href="{% url 'order:trainer_order_history'%}">Order Hstory</a> </li>
-          
+
           {% else %}
             <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
 

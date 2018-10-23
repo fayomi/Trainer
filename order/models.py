@@ -3,7 +3,8 @@ from django.db import models
 
 class Order(models.Model):
     #this will take information from the stripe form
-    client_name = models.CharField(max_length=250, default='none') #newnew
+    client_name = models.CharField(max_length=250, default='none')
+    trainer_name = models.CharField(max_length=250, default='none') #new addition
     token = models.CharField(max_length=250,blank=True)
     total = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Order Gross Total')
     net_pay = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='GBP Order Net Total', default=0.00)
@@ -24,7 +25,6 @@ class Order(models.Model):
 class OrderItem(models.Model):
     workout = models.CharField(max_length=250)
     sessions = models.IntegerField(default=0)
-    trainer = models.CharField(max_length=250, default='none') #new addition
     trainer_id = models.CharField(max_length=250, default='none')
     client_id = models.CharField(max_length=250, default='none')
     quantity = models.IntegerField()

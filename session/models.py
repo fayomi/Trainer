@@ -20,7 +20,7 @@ class Session(models.Model):
 
 
 class AvailableSession(models.Model):
-    session = models.ForeignKey(Session,on_delete=models.CASCADE)
+    session = models.ForeignKey(Session,on_delete=models.CASCADE,related_name='availablesession')
     available_sessions = models.PositiveIntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
 

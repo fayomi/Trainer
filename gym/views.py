@@ -18,8 +18,12 @@ CLIENT_SECRET = settings.STRIPE_SECRET_KEY
 
 
 @login_required
-def profileView(request):
+def clientProfileView(request):
+
+
     user_id = request.user.id
+
+##################################### For Clients
 
     # this filters the most recent order
     session_filter = Session.objects.filter(client_id=user_id).order_by('-id')
@@ -64,25 +68,53 @@ def profileView(request):
                 session.save()
 
         else:
-            print('yu have no more workouts')
+            print('you have no more workouts')
 
     if (request.GET.get('use_session')):
         statusChange()
         createAvailabeSession()
-    else:
+        return redirect('/client_profile/') #move to pending page
+    else: # probably change status to complete
         print('nothing to see here')
         pass
 
-
-
-
-
-
-
-
-
     context = {'session': session, 'available': available}
-    return render(request,'gym/profile.html', context)
+    return render(request,'gym/client_profile.html', context)
+
+
+@login_required
+def clientPendingView(request):
+
+    return render(request, 'gym/client_pending.html')
+
+@login_required
+def trainerProfileView(request):
+    user_id = request.user.id
+
+
+    # this filters the most all orders
+    session_filter = Session.objects.filter(trainer_id=user_id).order_by('-id')
+
+    session_id = []
+    for session in session_filter:
+            session_id.append(session.id)
+
+    print(session_id)
+
+    available_info = []
+    # for each session in the session id
+    for session in session_id:
+        available = AvailableSession.objects.filter(session__id=session)
+        # add the number of available sessions?
+        for a in available:
+            print(a)
+            available_info.append(a)
+
+
+
+    context = {'session_filter': session_filter, 'available_info': available_info}
+    return render(request,'gym/trainer_profile.html', context)
+
 
 
 class TrainerListView(ListView):
