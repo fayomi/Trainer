@@ -19,17 +19,23 @@
     <br>
     <br>
     <br>
+    {% if session.status == 'complete'%}
+    <p>Congratulations you've completed your workout</p>
+    <p>Book another: Here</p>
+    {% else %}
     <p>Your newest order is: {{ session.order_id }} from {{ session.order.trainer_name}}</p>
     {% for a in available %}
     <p>You have: {{ a.available_sessions }} available sessions. last used: {{ a.date }}</p>
+
     {% endfor %}
     <form method="get">
-    <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
+      <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
     </form>
+
     <br>
     <br>
     <p> <a class="btn btn-success" href="{% url 'gym:client_update' pk=user.pk %}">Update Profile</a> </p>
-
+    {% endif %}
   {% else %}
   <p>You are not a client</p>
 

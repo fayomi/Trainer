@@ -6,6 +6,7 @@ urlpatterns = [
     path('',views.TrainerListView.as_view(),name='trainer_list'), #to view list of trainers
     path('client/<pk>/', views.clientProfileView,name='client_profile'), # to view client profile
     path('trainer_profile/', views.trainerProfileView,name='trainer_profile'),
+    path('complete/<pk>/', views.complete,name='complete'),
     path('client_pending/', views.clientPendingView,name='client_pending'),
     # path('profile/', views.profileView.statusChange,name='status'),
     path('trainer_register/',views.trainerRegister, name='trainer_signup'),

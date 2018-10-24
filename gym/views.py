@@ -29,35 +29,78 @@ def clientProfileView(request, pk):
     session_filter = Session.objects.filter(client_id=user_id).order_by('-id')
     session = session_filter[0]
     session_id = session.id
-    print(session.status)
 
     # this shows how many availbale session there are
     available = AvailableSession.objects.filter(session__id=session_id)
     for a in available:
         print(a.date)
-        # print(a.available_sessions)
 
-    # function to change status from 'available' to 'completed'
-    # abstract it to if button is pressed, change status
+    latest_available = available.latest('id')
 
 
+    # change status to pending or complete
     def statusChange():
-        # print(x)
-        session.status = 'completed'
+        session.status = 'pending'
         session.save()
 
-    # this then creates a new available session
+
+    if (request.GET.get('use_session')):
+        statusChange()
+        # createAvailabeSession()
+        return redirect('gym:client_profile',pk=user_id) #move to pending page
+    else: # probably change status to complete
+        print('nothing to see here')
+        pass
+
+    context = {'session': session, 'available': available}
+    return render(request, 'gym/clientprofile_detail.html', context)
+
+
+# currently not being used
+@login_required
+def clientPendingView(request):
+
+    return render(request, 'gym/client_pending.html')
+
+
+
+@login_required
+def complete(request, pk):
+    user_id = request.user.id
+
+    session= Session.objects.get(pk=pk)
+    session_id=session.id
+
+    # this shows how many availbale session there are
+    available = AvailableSession.objects.filter(session__id=session_id)
+    for a in available:
+        print(a.date)
 
     def createAvailabeSession():
         available_session = a.available_sessions
 
 
-        if session.status == 'completed' and available_session >= 1:
+        if session.status == 'pending' and available_session == 1:
             available_session -= 1
             new_session = available_session
 
 
-            if session.status == 'completed':
+            if session.status == 'pending':
+                a_s = AvailableSession.objects.create(
+                        session = session,
+                        available_sessions = new_session
+                        )
+                a_s.save()
+                print(available_session)
+                session.status = 'complete'
+                session.save()
+
+        elif session.status == 'pending' and available_session > 1:
+            available_session -= 1
+            new_session = available_session
+
+
+            if session.status == 'pending':
                 a_s = AvailableSession.objects.create(
                         session = session,
                         available_sessions = new_session
@@ -70,31 +113,29 @@ def clientProfileView(request, pk):
         else:
             print('you have no more workouts')
 
-    if (request.GET.get('use_session')):
-        statusChange()
-        createAvailabeSession()
-        return redirect('gym:client_profile',pk=user_id) #move to pending page
-    else: # probably change status to complete
-        print('nothing to see here')
-        pass
 
-    print(user_id)
-    context = {'session': session, 'available': available}
-    return render(request, 'gym/clientprofile_detail.html', context)
+    createAvailabeSession()
+    return redirect('gym:trainer_profile')
 
-
-@login_required
-def clientPendingView(request):
-
-    return render(request, 'gym/client_pending.html')
 
 @login_required
 def trainerProfileView(request):
     user_id = request.user.id
 
 
-    # this filters the most all orders
+    # this filters all sessions linked to the trainer
     session_filter = Session.objects.filter(trainer_id=user_id).order_by('-id')
+
+    # when the 'confirm_session' button is pressed
+    if (request.GET.get('confirm_session')):
+        # statusChange()
+        # createAvailabeSession()
+        return redirect('gym:client_profile',pk=user_id) #move to pending page
+    else: # probably change status to complete
+        print('nothing to see here')
+        pass
+
+
 
     session_id = []
     for session in session_filter:

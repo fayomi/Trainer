@@ -16,7 +16,27 @@
     <br>
     <br>
     <br>
-    <p>client x has requested to use a session</p>
+    <p>PENDING QUEUE</p>
+    <br>
+    {% for session in session_filter %}
+      {% if session.status == 'pending' %}
+      <form method="GET">
+        {% csrf_token %}
+        Status: {{ session.status}} <br>
+        {{ session.order.client_name}} has requested to use a {{ session.workout_name }} session
+
+        <a class="btn btn-primary" href="{% url 'gym:complete' pk=session.pk %}">Confirm Session</a>
+        </form>
+        <br>
+        <br>
+      {% endif %}
+
+    {% endfor %}
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <p>For loop: client name has x amount of sessions yet</p>
     <br>
     <br>
