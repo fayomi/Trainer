@@ -20,22 +20,24 @@
     <br>
     <br>
     {% if session.status == 'complete'%}
-    <p>Congratulations you've completed your workout</p>
-    <p>Book another: Here</p>
+      <p>Congratulations you've completed your workout</p>
+      <p>Book another: <a href="{% url 'gym:trainer_detail' pk=session.trainer_id%}">Here</a> </p>
+      <p>Checkout your workout history <a href="{% url 'order:order_history'%}">Here</a> </p>
     {% else %}
-    <p>Your newest order is: {{ session.order_id }} from {{ session.order.trainer_name}}</p>
-    {% for a in available %}
-    <p>You have: {{ a.available_sessions }} available sessions. last used: {{ a.date }}</p>
+      <p>Your newest order is: {{ session.order_id }} from {{ session.order.trainer_name}}</p>
+      {% for a in available %}
+        <p>You have: {{ a.available_sessions }} available sessions. last used: {{ a.date }}</p>
 
-    {% endfor %}
-    <form method="get">
-      <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
-    </form>
+        {% endfor %}
+        <form method="get">
+          <input type="submit" class="btn btn-primary" value="Use Session" name="use_session">
+        </form>
 
     <br>
     <br>
-    <p> <a class="btn btn-success" href="{% url 'gym:client_update' pk=user.pk %}">Update Profile</a> </p>
+
     {% endif %}
+  <p> <a class="btn btn-success" href="{% url 'gym:client_update' pk=user.pk %}">Update Profile</a> </p>
   {% else %}
   <p>You are not a client</p>
 
