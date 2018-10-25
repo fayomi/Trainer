@@ -11,6 +11,7 @@ class Session(models.Model):
     total_sessions = models.PositiveIntegerField(default=0)
     workout_name = models.CharField(max_length=250)
     status = models.CharField(max_length=250, default='available')
+    date = models.DateTimeField(auto_now_add=True)
     # if status is completed it creates a new object of available session(1-total sessions) with updated time
     # and changes status back to pending?
     # If available sessions is 0, display, you have no active sessions

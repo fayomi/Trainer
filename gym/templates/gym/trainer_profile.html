@@ -34,21 +34,26 @@
     {% endfor %}
     <br>
     <br>
+    <h3>All Clients Which Are Available</h3>
+    {% for session in session_filter %}
+      {% if session.status == 'available' %}
+        <h4>{{ session.order.client_name}} booked {{ session.total_sessions}} workouts of {{session.workout_name}} on {{session.date}}<br></h4>
+        {% for a in available_info %}
+          {% if a.session_id == session.id %}
+          There are {{a.available_sessions}}workouts left. Last workout took place on {{ a.date}}<br>
+          {% endif %}
+
+        {% endfor %}
+
+
+
+      {% endif %}
+
+    {% endfor%}
     <br>
-    <br>
-    <br>
-    <p>For loop: client name has x amount of sessions yet</p>
     <br>
     <br>
 
-    <p>Here are the sessions Available</p>
-    {% for a in available_info%}
-    {{ a.session.order.client_name }} has {{ a.available_sessions }} left, bought on {{ a.session.order.created }}
-    <br>
-    used on: {{ a.date}}
-    <br>
-
-    {% endfor %}
 
 
   {% else %}

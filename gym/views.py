@@ -123,8 +123,7 @@ def trainerProfileView(request):
     user_id = request.user.id
 
 
-    # this filters all sessions linked to the trainer
-    session_filter = Session.objects.filter(trainer_id=user_id).order_by('-id')
+
 
     # when the 'confirm_session' button is pressed
     if (request.GET.get('confirm_session')):
@@ -135,7 +134,12 @@ def trainerProfileView(request):
         print('nothing to see here')
         pass
 
+    # this filters all sessions linked to the trainer
+    session_filter = Session.objects.filter(trainer_id=user_id).order_by('-id')
 
+    # print all status
+    # for session in session_filter:
+    #     print(session.status)
 
     session_id = []
     for session in session_filter:
@@ -143,14 +147,17 @@ def trainerProfileView(request):
 
     print(session_id)
 
+
+
     available_info = []
     # for each session in the session id
     for session in session_id:
         available = AvailableSession.objects.filter(session__id=session)
         # add the number of available sessions?
         for a in available:
-            print(a)
+            # print(a.available_sessions)
             available_info.append(a)
+
 
 
 
