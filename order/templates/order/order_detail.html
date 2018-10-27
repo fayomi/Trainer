@@ -17,4 +17,13 @@
   <p>Desctiption: {{item.workout_description}}</p>
   {% endfor %}
 
+  <h3>Session History</h3>
+  {% for a in available %}
+    {% if a.available_sessions == total %}
+      <p>You started with {{ a.available_sessions }} available sessions. created on: {{ a.date }}</p>
+    {% else %}
+      <p>You have: {{ a.available_sessions }} available sessions. Session last used: {{ a.date }}</p>
+    {% endif %}
+  {% endfor %}
+
 {% endblock %}

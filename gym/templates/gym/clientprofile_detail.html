@@ -26,9 +26,12 @@
     {% else %}
       <p>Your newest order is: {{ session.order_id }} from {{ session.order.trainer_name}}</p>
       {% for a in available %}
-        <p>You have: {{ a.available_sessions }} available sessions. last used: {{ a.date }}</p>
-
-        {% endfor %}
+        {% if a.available_sessions == total %}
+          <p>You started with {{ a.available_sessions }} available sessions. created on: {{ a.date }}</p>
+        {% else %}
+          <p>You have: {{ a.available_sessions }} available sessions. Session last used on: {{ a.date }}</p>
+        {% endif %}
+      {% endfor %}
         <form method="get">
           <input type="submit" class="btn btn-primary" value="Request Session" name="request_session">
           <input type="submit" class="btn btn-primary" value="Attend Session" name="use_session">

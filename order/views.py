@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from .models import Order, OrderItem
+from session.models import Session, AvailableSession
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -23,12 +24,26 @@ def orderHistory(request):
 
 @login_required
 def viewOrder(request, order_id):
+    # user_id = request.user.id
+
     if request.user.is_authenticated:
         email = str(request.user.email)
         order = Order.objects.get(id=order_id,emailAddress=email)
         order_items = OrderItem.objects.filter(order=order)
 
-    context = {'order': order, 'order_items': order_items}
+    session = Session.objects.get(order_id=order_id)
+    session_id = session.id
+
+    available = AvailableSession.objects.filter(session__id=session_id)
+
+    # total gives hw many sessions they start with
+    total = available[0].available_sessions
+
+
+
+
+
+    context = {'order': order, 'order_items': order_items, 'available': available, 'total': total}
     return render(request, 'order/order_detail.html', context)
 
 
@@ -39,6 +54,6 @@ def trainerOrderHistory(request):
         trainer_id = str(request.user.id)
         trainer_orders = OrderItem.objects.filter(trainer_id=trainer_id)
         print(trainer_orders)
-                    
+
     context = {'trainer_orders':trainer_orders}
     return render(request,'order/trainer_orders_list.html',context)

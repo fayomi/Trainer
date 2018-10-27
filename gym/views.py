@@ -32,9 +32,11 @@ def clientProfileView(request, pk):
 
     # this shows how many availbale session there are
     available = AvailableSession.objects.filter(session__id=session_id)
-    for a in available:
-        print(a.date)
 
+    total = available[0].available_sessions
+
+
+    # i might be able to delete this
     latest_available = available.latest('id')
 
 
@@ -52,7 +54,7 @@ def clientProfileView(request, pk):
         print('nothing to see here')
         pass
 
-    context = {'session': session, 'available': available}
+    context = {'session': session, 'available': available, 'total': total}
     return render(request, 'gym/clientprofile_detail.html', context)
 
 
