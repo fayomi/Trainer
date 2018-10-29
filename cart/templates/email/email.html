@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order #{{ transaction.id }} - Sweatsite</title>
+  </head>
+  <body>
+    <h3>Thanks for the Order</h3>
+    <p>Please make sure all the details are corect</p>
+    <br>
+    <p>order: {{ transaction.id }}</p>
+    <p>date: {{ transaction.created }}</p>
+
+    {% for item in order_items %}
+    <p>Workout Name: {{ item.workout }}</p>
+    <p>Workout Description: {{ item.workout_description}}</p>
+    <p>Number of Sessions: {{ item.sessions }}</p>
+    <h3>Amount Paid</h3>
+    <p>Price: £{{ item.price}}</p>
+
+    {% endfor %}
+
+
+  </body>
+</html>

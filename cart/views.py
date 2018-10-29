@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 import stripe
 from django.conf import settings
 
+from django.template.loader import get_template
+from django.core.mail import EmailMessage
+
 platform_fee = 2 #aso remember to change in stripe application_fee if updated
 
 
@@ -126,6 +129,12 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                 oi.save()
                 # the terminal will print confirmation
                 print('order has been created')
+            try:
+                # Calling the sendEmail Function
+                sendEmail(order_details.id)
+                print('The order email has been sent')
+            except IOError as e:
+                return e
 
             # to get the sessions
             session_details = Session.objects.create(
@@ -143,6 +152,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                         available_sessions = available_session.workout.sessions,
                 )
                 a_s.save()
+
+
 
 
             return redirect('order:thanks', order_details.id)
@@ -163,3 +174,23 @@ def deleteItem(request,pk):
     cart_item = get_object_or_404(CartItem,pk=pk)
     cart_item.delete()
     return redirect('cart:cart_detail')
+
+def sendEmail(order_id):
+    transaction = Order.objects.get(id=order_id)
+    order_items = OrderItem.objects.filter(order=transaction)
+    try:
+        # sending the order to customer
+        subject = "Sweatsite - New Order #{}".format(transaction.id)
+        to = ['{}'.format(transaction.emailAddress)]
+        print(to)
+        from_email = "orders@sweatsite.com"
+        order_information = {
+        'transaction': transaction,
+        'order_items': order_items
+        }
+        message = get_template('email/email.html').render(order_information)
+        msg = EmailMessage(subject, message, to=to, from_email=from_email)
+        msg.content_subtype = 'html'
+        msg.send()
+    except IOError as e:
+        return e

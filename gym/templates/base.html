@@ -34,7 +34,7 @@
 
           <li> <a href="{% url 'cart:cart_detail'%}"> Cart</a> </li>
           {% if user.is_trainer %}
-            <li> <a href="{% url 'order:trainer_order_history'%}">Order Hstory</a> </li>
+            <li> <a href="{% url 'order:trainer_order_history'%}">Order History</a> </li>
 
           {% else %}
             <li> <a href="{% url 'order:order_history'%}">Order Hstory</a> </li>
