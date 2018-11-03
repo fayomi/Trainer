@@ -14,7 +14,7 @@
     <p>Order Number:{{ order.id }} </p>
     <p>Order Date: {{ order.order.created|date:"d M Y"}}</p>
 
-    <p>Customer email: {{ order.order.emailAddress}}</p>
+    <p>Customer email: {{ order.order.client_email}}</p>
     <p>Number of sessions: {{ order.sessions }}</p>
     <p>Gross Amount:{{ order.order.total }} </p>
     <p>Service Fee: {{ order.order.service_fee }}</p>

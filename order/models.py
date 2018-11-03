@@ -11,7 +11,8 @@ class Order(models.Model):
     stripe_fee = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='Stripe Fee', default=0.00)
     platform_fee = models.IntegerField(default=2)
     service_fee = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='Total Service Fee', default=0.00)
-    emailAddress = models.EmailField(max_length=250,blank=True,verbose_name='Email Address')
+    client_email = models.EmailField(max_length=250,blank=True,verbose_name='Client Email')
+    trainer_email = models.EmailField(max_length=250,blank=True,verbose_name='Trainer Email')
     created = models.DateTimeField(auto_now_add=True)
 
 

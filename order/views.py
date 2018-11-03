@@ -17,7 +17,7 @@ def thanks(request, order_id):
 def orderHistory(request):
     if request.user.is_authenticated:
         email = str(request.user.email)
-        order_details = Order.objects.filter(emailAddress=email)
+        order_details = Order.objects.filter(client_email=email)
 
     context = {'order_details': order_details}
     return render(request,'order/orders_list.html',context)
@@ -28,7 +28,7 @@ def viewOrder(request, order_id):
 
     if request.user.is_authenticated:
         email = str(request.user.email)
-        order = Order.objects.get(id=order_id,emailAddress=email)
+        order = Order.objects.get(id=order_id,client_email=email)
         order_items = OrderItem.objects.filter(order=order)
 
     session = Session.objects.get(order_id=order_id)

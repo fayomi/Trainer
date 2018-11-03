@@ -75,6 +75,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
     client_id = request.user.id
     client_email = request.user.email
 
+
     # to calculate the net pay
     stripe_fee = stripeFeeCalculator(total)
     service_fee = stripe_fee + platform_fee
@@ -91,6 +92,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         trainer_stripe_id=cart_item.workout.trainer.stripe_id
         trainer_name = cart_item.workout.trainer.name
         description = cart_item.workout.name
+        trainer_email = cart_item.workout.trainer.user.email
+        print(trainer_email)
         # description = cart_item.workout.name
 
 
@@ -109,7 +112,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                     platform_fee = platform_fee,
                     service_fee = service_fee,
                     net_pay = net_pay,
-                    emailAddress = client_email,
+                    client_email = client_email,
+                    trainer_email = trainer_email
 
             )
             order_details.save()
@@ -131,8 +135,9 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                 print('order has been created')
             try:
                 # Calling the sendEmail Function
-                sendEmail(order_details.id)
+                sendClientEmail(order_details.id)
                 print('The order email has been sent')
+                sendTrainerEmail(order_details.id)
             except IOError as e:
                 return e
 
@@ -175,20 +180,40 @@ def deleteItem(request,pk):
     cart_item.delete()
     return redirect('cart:cart_detail')
 
-def sendEmail(order_id):
+def sendClientEmail(order_id):
     transaction = Order.objects.get(id=order_id)
     order_items = OrderItem.objects.filter(order=transaction)
     try:
         # sending the order to customer
         subject = "Sweatsite - New Order #{}".format(transaction.id)
-        to = ['{}'.format(transaction.emailAddress)]
+        to = ['{}'.format(transaction.client_email)]
         print(to)
         from_email = "orders@sweatsite.com"
         order_information = {
         'transaction': transaction,
         'order_items': order_items
         }
-        message = get_template('email/email.html').render(order_information)
+        message = get_template('email/client_email.html').render(order_information)
+        msg = EmailMessage(subject, message, to=to, from_email=from_email)
+        msg.content_subtype = 'html'
+        msg.send()
+    except IOError as e:
+        return e
+
+def sendTrainerEmail(order_id):
+    transaction = Order.objects.get(id=order_id)
+    order_items = OrderItem.objects.filter(order=transaction)
+    try:
+        # sending the order to customer
+        subject = "Sweatsite - New Order #{}".format(transaction.id)
+        to = ['{}'.format(transaction.trainer_email)]
+        print(to)
+        from_email = "orders@sweatsite.com"
+        order_information = {
+        'transaction': transaction,
+        'order_items': order_items
+        }
+        message = get_template('email/trainer_email.html').render(order_information)
         msg = EmailMessage(subject, message, to=to, from_email=from_email)
         msg.content_subtype = 'html'
         msg.send()
