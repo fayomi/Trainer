@@ -8,6 +8,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import User,TrainerProfile, Workout, ClientProfile
 from session.models import Session, AvailableSession
 
+from gym.tokens import account_activation_token
+from django.template.loader import get_template
+from django.core.mail import EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
+
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
 import requests
 from django.conf import settings
 
@@ -240,23 +248,24 @@ def trainerRegister(request):
 
         if form.is_valid() and profile_form.is_valid():
             user = form.save()
+            user.is_active = False
+            user.save()
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
 
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-
-            user = authenticate(username=username, password=password)
-            login(request, user)
-
-            return redirect('gym:stripe_form')
+            email = form.cleaned_data['email']
+            current_site = get_current_site(request)
+            sendActivationEmail(email, user, current_site)
+            return HttpResponse('Please confirm your email address to complete the registration. Check your junk mail if email not in inbox')
     else:
         form = TrainerSignUpForm()
         profile_form = TrainerProfileForm()
 
     context = {'form': form, 'profile_form': profile_form}
     return render(request,'registration/trainer_signup_form.html', context)
+
+
 
 
 def stripeForm(request):
@@ -290,20 +299,62 @@ def clientRegister(request):
 
         if form.is_valid() and profile_form.is_valid():
             user = form.save()
+            user.is_active = False
+            user.save()
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
 
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-
-            user = authenticate(username=username, password=password)
-            login(request, user)
-
-            return redirect('/')
+            email = form.cleaned_data['email']
+            current_site = get_current_site(request)
+            sendActivationEmail(email, user, current_site)
+            return HttpResponse('Please confirm your email address to complete the registration. Check your junk mail if email not in inbox')
     else:
         form = ClientSignUpForm()
         profile_form = ClientProfileForm()
 
     context = {'form': form, 'profile_form': profile_form}
     return render(request,'registration/client_signup_form.html', context)
+
+def activate(request, uidb64, token):
+
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        print(uid)
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
+
+def sendActivationEmail(email, user, current_site):
+
+    try:
+        # sending the order to customer
+        subject = 'Activate your blog account.'
+        to = [email]
+        print(to)
+        from_email = "info@sweatsite.com"
+        information = {
+            'user': user,
+            'domain': current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+            'token':account_activation_token.make_token(user),
+        }
+        # order_information = {
+        # 'transaction': transaction,
+        # 'order_items': order_items
+        # }
+        message = get_template('email/activation.html').render(information)
+        msg = EmailMessage(subject, message, to=to, from_email=from_email)
+        msg.content_subtype = 'html'
+        msg.send()
+    except IOError as e:
+        return e

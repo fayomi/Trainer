@@ -10,6 +10,7 @@ urlpatterns = [
     path('client_pending/', views.clientPendingView,name='client_pending'),
     # path('profile/', views.profileView.statusChange,name='status'),
     path('trainer_register/',views.trainerRegister, name='trainer_signup'),
+    path('activate/<uidb64>/<token>/',views.activate, name='activate'),
     path('stripe_form/',views.stripeForm, name='stripe_form'),
     path('client_register/',views.clientRegister, name='client_signup'),
     path('trainers/<pk>/',views.TrainerDetailView.as_view(),name='trainer_detail'),

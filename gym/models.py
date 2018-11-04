@@ -28,6 +28,7 @@ class TrainerProfile(models.Model):
     def get_absolute_url(self):
         return reverse('gym:trainer_detail', kwargs={'pk':self.pk})
 
+
 class ClientProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
     name = models.CharField(max_length=100,null=True)
