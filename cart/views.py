@@ -93,8 +93,33 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
         trainer_name = cart_item.workout.trainer.name
         description = cart_item.workout.name
         trainer_email = cart_item.workout.trainer.user.email
-        print(trainer_email)
-        # description = cart_item.workout.name
+        subscription = cart_item.workout.subscription
+
+        def product_id():
+            product = stripe.Product.create(
+            name='My SaaS Platform',
+            type='service',
+                )
+            product_id = product.id
+            return product_id
+
+        def plan_id(stripe_product_id):
+            plan = stripe.Plan.create(
+            product=stripe_product_id,
+            nickname='SaaS Platform USD',
+            interval='month',
+            currency='usd',
+            amount=10000,
+                )
+            plan_id = plan.id
+            return plan_id
+
+
+        if subscription == 1:
+            stripe_product_id = product_id()
+            stripe_plan_id = plan_id(stripe_product_id)
+
+
 
 
 
@@ -113,7 +138,10 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                     service_fee = service_fee,
                     net_pay = net_pay,
                     client_email = client_email,
-                    trainer_email = trainer_email
+                    trainer_email = trainer_email,
+                    subscription = subscription,
+                    stripe_product_id = stripe_product_id,
+                    stripe_plan_id = stripe_plan_id
 
             )
             order_details.save()

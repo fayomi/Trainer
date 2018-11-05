@@ -51,6 +51,8 @@ class Workout(models.Model):
     price = models.IntegerField()
     sessions = models.PositiveIntegerField(default=0)
     workout_description = models.TextField(default='There is no description available')
+    subscription = models.BooleanField(default=False)
+
 
     def get_absolute_url(self):
         return reverse('gym:trainer_detail', kwargs={'pk':self.pk})

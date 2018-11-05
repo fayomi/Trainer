@@ -19,9 +19,16 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import requests
 from django.conf import settings
 
+import stripe
+
 CLIENT_ID = 'ca_Dht99lrMkYqjCsNZRHznzbcyhCfRzIUm'
 STRIPE_TOKEN_URL = 'https://connect.stripe.com/oauth/token'
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 CLIENT_SECRET = settings.STRIPE_SECRET_KEY
+
+
+
 
 
 
@@ -130,6 +137,7 @@ def complete(request, pk):
 
 @login_required
 def trainerProfileView(request):
+
     user_id = request.user.id
 
 
@@ -201,15 +209,38 @@ class TrainerUpdateView(LoginRequiredMixin,UpdateView):
 class WorkoutCreateView(LoginRequiredMixin,CreateView):
 
     model = Workout
-    fields = ('trainer','name','price','sessions')
+    fields = ('trainer','name','price','sessions','subscription')
 
 class WorkoutUpdateView(LoginRequiredMixin,UpdateView):
     model = Workout
-    fields = ('name','price','sessions','workout_description')
+    fields = ('name','price','sessions','workout_description','subscription')
+
+    # def product_id():
+    #     product = stripe.Product.create(
+    #     name='My SaaS Platform',
+    #     type='service',
+    #     )
+    #
+    #     return product.id
+    #
+    # if model.subscription == 1:
+    #     product_id = product_id()
+    #     print(product_id)
 
 class ClientUpdateView(LoginRequiredMixin,UpdateView):
     model = ClientProfile
     fields = ('profile_img','name','location','phone')
+
+
+
+# if subscription == 1:
+#     product = stripe.Product.create(
+#     name='My SaaS Platform',
+#     type='service',
+#     )
+#     print(product.id)
+# else:
+#     pass
 
 
 @login_required
