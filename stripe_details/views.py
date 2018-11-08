@@ -28,7 +28,7 @@ def stripe_register(request):
                     pub = y['publishable']
                     sec = y['secret']
             return acct_id, pub, sec
-
+# test
 
         stripe_deets = createStripeAcct()
         # print(stripe_deets)
