@@ -176,8 +176,39 @@ def trainerProfileView(request):
             # print(a.available_sessions)
             available_info.append(a)
 
-
-
+    # # get stripe id public and secret key
+    # if (request.GET.get('stripe_register')):
+    #     def createStripeAcct():
+    #         acct = stripe.Account.create(
+    #             country="GB",
+    #             type="custom"
+    #             )
+    #         acct_id = acct.id
+    #         acct_keys = acct.items
+    #         for x, y in acct_keys():
+    #             if x == 'keys':
+    #                 pub = y['publishable']
+    #                 sec = y['secret']
+    #         return acct_id, pub, sec
+    #
+    #
+    #     stripe_deets = createStripeAcct()
+    #     print(stripe_deets)
+    #
+    #     trainerprofile = TrainerProfile.objects.get(pk=user_id)
+    #     trainerprofile.stripe_id = stripe_deets[0]
+    #     trainerprofile.stripe_pub_key = stripe_deets[1]
+    #     trainerprofile.stripe_secret_key = stripe_deets[2]
+    #     trainerprofile.save()
+    #
+    #
+    #
+    #     # statusChange()
+    #     # # createAvailabeSession()
+    #     # return redirect('gym:client_profile',pk=user_id) #move to pending page
+    # else: # probably change status to complete
+    #     print('nothing to see here')
+    #     pass
 
     context = {'session_filter': session_filter, 'available_info': available_info}
     return render(request,'gym/trainer_profile.html', context)
@@ -299,28 +330,28 @@ def trainerRegister(request):
 
 
 
-def stripeForm(request):
-
-    url = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id={}&scope=read_write'.format(CLIENT_ID)
-
-    user = request.user
-
-    code = request.GET.get('code')
-    # print('new',code)
-    data = {'client_secret': CLIENT_SECRET,'code': code,'grant_type':'authorization_code'}
-    r = requests.post(STRIPE_TOKEN_URL, data=data)
-    json_data =  r.json()
-
-    try:
-        id = json_data['stripe_user_id']
-        user.trainerprofile.stripe_id = id
-        user.trainerprofile.save()
-        return redirect('/')
-    except:
-        pass
-
-    context = {'url':url}
-    return render(request, 'registration/stripeform.html', context)
+# def stripeForm(request):
+#
+#     url = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id={}&scope=read_write'.format(CLIENT_ID)
+#
+#     user = request.user
+#
+#     code = request.GET.get('code')
+#     # print('new',code)
+#     data = {'client_secret': CLIENT_SECRET,'code': code,'grant_type':'authorization_code'}
+#     r = requests.post(STRIPE_TOKEN_URL, data=data)
+#     json_data =  r.json()
+#
+#     try:
+#         id = json_data['stripe_user_id']
+#         user.trainerprofile.stripe_id = id
+#         user.trainerprofile.save()
+#         return redirect('/')
+#     except:
+#         pass
+#
+#     context = {'url':url}
+#     return render(request, 'registration/stripeform.html', context)
 
 
 def clientRegister(request):

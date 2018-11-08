@@ -114,17 +114,36 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
             plan_id = plan.id
             return plan_id
 
+        def customer_id(client_email, token):
+            customer = stripe.Customer.create(
+                email=client_email,
+                source=token,
+                    )
+            customer_id = customer.id
+            return customer_id
+
+
 
         if subscription == 1:
             stripe_product_id = product_id()
             stripe_plan_id = plan_id(stripe_product_id)
+            stripe_customer_id = customer_id(client_email, token)
+
+            subscription = stripe.Subscription.create(
+                customer=stripe_customer_id,
+                items=[
+                    {
+                    "plan": stripe_plan_id,
+                    },
+                ],
+                application_fee_percent=1,
+                stripe_account=trainer_stripe_id,
+                )
 
 
-
-
-
-        # customer = stripe.Customer.create(email=email,source=token)
-        charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=200,stripe_account=trainer_stripe_id)
+        else:
+            # customer = stripe.Customer.create(email=email,source=token)
+            charge = stripe.Charge.create(amount=stripe_total,currency="gbp",description=description,source=token,application_fee=200,stripe_account=trainer_stripe_id)
 
         #Now Creating the Order
         try:
@@ -141,7 +160,8 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
                     trainer_email = trainer_email,
                     subscription = subscription,
                     stripe_product_id = stripe_product_id,
-                    stripe_plan_id = stripe_plan_id
+                    stripe_plan_id = stripe_plan_id,
+                    stripe_customer_id = stripe_customer_id
 
             )
             order_details.save()
