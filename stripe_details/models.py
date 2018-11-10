@@ -14,7 +14,7 @@ class StripeDetail(models.Model):
         db_table = 'StripeDetail'
 
 class Individual(models.Model):
-    stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE)
+    stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE, null=True)
     legal_entity_address_city = models.CharField(max_length=100,blank=False)
     legal_entity_address_line1 = models.CharField(max_length=100,blank=False)
     legal_entity_address_postal_code = models.CharField(max_length=100,blank=False)
@@ -31,7 +31,7 @@ class Individual(models.Model):
 
 
 class Company(models.Model):
-    stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE)
+    stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE, null=True)
     legal_entity_address_city = models.CharField(max_length=100,blank=False)
     legal_entity_address_line1 = models.CharField(max_length=100,blank=False)
     legal_entity_address_postal_code = models.CharField(max_length=100,blank=False)
@@ -49,7 +49,7 @@ class Company(models.Model):
 
 
 class ExternalAccount(models.Model):
-    stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE)
+    stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE, null=True)
     external_account_new_id = models.CharField(max_length=200)
     name = models.CharField(max_length=100,null=True)
     object = models.CharField(max_length=100,blank=False) #Should be bank_account.
