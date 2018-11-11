@@ -32,12 +32,18 @@ class Individual(models.Model):
 
 class Company(models.Model):
     stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE, null=True)
+
+    legal_entity_first_name = models.CharField(max_length=100,blank=False)
+    legal_entity_last_name = models.CharField(max_length=100,blank=False)
+    legal_entity_dob_day = models.PositiveIntegerField(blank=False)
+    legal_entity_dob_month = models.PositiveIntegerField(blank=False)
+    legal_entity_dob_year = models.PositiveIntegerField(blank=False)
+
     legal_entity_address_city = models.CharField(max_length=100,blank=False)
     legal_entity_address_line1 = models.CharField(max_length=100,blank=False)
     legal_entity_address_postal_code = models.CharField(max_length=100,blank=False)
     legal_entity_business_name = models.CharField(max_length=200,blank=False)
-    legal_entity_typebusiness_tax_id = models.CharField(max_length=200,blank=False)
-    companies_house_registration_number_CRN = models.CharField(max_length=200,blank=False)
+    legal_entity_type_business_tax_id = models.CharField(max_length=200,blank=False)
     legal_entity_personal_address_city = models.CharField(max_length=100,blank=False)
     legal_entity_personal_address_line1 = models.CharField(max_length=100,blank=False)
     legal_entity_personal_address_postal_code = models.CharField(max_length=100,blank=False)
@@ -46,6 +52,7 @@ class Company(models.Model):
 
     class Meta:
         db_table = 'StripeCompany'
+
 
 
 class ExternalAccount(models.Model):

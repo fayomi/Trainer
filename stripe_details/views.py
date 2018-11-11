@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 # from gym.models import User,TrainerProfile
-from .models import StripeDetail, Individual
-from .forms import IndividualForm
+from .models import StripeDetail, Individual, Company
+from .forms import IndividualForm, CompanyForm
 from django.contrib.auth.decorators import login_required
 
 import requests
@@ -68,7 +68,6 @@ def stripe_register(request):
 
 
         stripe_deets = createStripeAcct()
-        # print(stripe_deets)
 
 
         try:
@@ -80,23 +79,32 @@ def stripe_register(request):
                 stripe_secret_key = stripe_deets[2],
             )
             stripe_details.save()
-            return redirect('stripe:stripe_individual')
+            return redirect('stripe:stripe_legal_type')
 
         except IOError as e:
                 return e
 
 
-
-        # statusChange()
-        # # createAvailabeSession()
-        # return redirect('gym:client_profile',pk=user_id) #move to pending page
-    else: # probably change status to complete
+    else:
 
         print('nothing to see here')
         pass
 
 
     return render(request, 'stripe_details/stripe_register.html')
+
+
+
+@login_required
+def stripe_legal_type(request):
+    if (request.GET.get('individual')):
+        return redirect('stripe:stripe_individual')
+    elif (request.GET.get('company')):
+        return redirect('stripe:stripe_company')
+
+
+
+    return render(request, 'stripe_details/stripe_legal_type.html')
 
 
 
@@ -133,21 +141,6 @@ def stripe_individual(request):
         print(acct)
 
 
-
-# legal_entity_address_city = models.CharField(max_length=100,blank=False)
-# legal_entity_address_line1 = models.CharField(max_length=100,blank=False)
-# legal_entity_address_postal_code = models.CharField(max_length=100,blank=False)
-# legal_entity_dob_day = models.PositiveIntegerField(blank=False)
-# legal_entity_dob_month = models.PositiveIntegerField(blank=False)
-# legal_entity_dob_year = models.PositiveIntegerField(blank=False)
-# legal_entity_first_name = models.CharField(max_length=100,blank=False)
-# legal_entity_last_name = models.CharField(max_length=100,blank=False)
-# tos_acceptance_date = models.DateTimeField(auto_now_add=True)
-# tos_acceptance_ip = models.CharField(max_length=100,blank=False)
-
-
-
-
     if request.method == 'POST':
         form = IndividualForm(request.POST)
 
@@ -164,3 +157,61 @@ def stripe_individual(request):
 
     context = {'form': form}
     return render(request,'stripe_details/stripe_individual.html', context)
+
+
+
+@login_required
+def stripe_company(request):
+    user_id = request.user.id
+
+    # make this a global variable
+    stripe_detail = StripeDetail.objects.get(user=user_id)
+
+    # to get the users stripe account id
+    stripe_account = stripe_detail.stripe_id
+
+    # function to send verification data to stripe
+    def send_to_stripe(stripe_detail):
+        company = Company.objects.get(stripe_detail=stripe_detail)
+
+        import time
+        acct = stripe.Account.retrieve(stripe_account)
+
+        acct.legal_entity.dob.day = company.legal_entity_dob_day
+        acct.legal_entity.dob.month = company.legal_entity_dob_month
+        acct.legal_entity.dob.year = company.legal_entity_dob_year
+        acct.legal_entity.first_name = company.legal_entity_first_name
+        acct.legal_entity.last_name = company.legal_entity_last_name
+
+        acct.legal_entity.address.city = company.legal_entity_address_city
+        acct.legal_entity.address.line1 = company.legal_entity_address_line1
+        acct.legal_entity.address.postal_code = company.legal_entity_address_postal_code
+        acct.legal_entity.business_name = company.legal_entity_business_name
+        acct.legal_entity.business_tax_id  = company.legal_entity_type_business_tax_id
+        acct.legal_entity.personal_address.city = company.legal_entity_personal_address_city
+        acct.legal_entity.personal_address.line1 = company.legal_entity_personal_address_line1
+        acct.legal_entity.personal_address.postal_code = company.legal_entity_personal_address_postal_code
+
+        acct.legal_entity.type = 'company'
+
+        acct.tos_acceptance.date = int(time.time())
+        acct.tos_acceptance.ip = '8.8.8.8' #TO BE REWORKED
+        acct.save()
+        print(acct)
+
+    if request.method == 'POST':
+        form = CompanyForm(request.POST)
+
+        if form.is_valid():
+            company = form.save()
+            company.stripe_detail = stripe_detail
+            company.save()
+
+            send_to_stripe(stripe_detail)
+
+            return redirect('/')
+    else:
+        form = CompanyForm()
+
+    context = {'form': form}
+    return render(request,'stripe_details/stripe_company.html', context)
