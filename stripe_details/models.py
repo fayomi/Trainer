@@ -58,7 +58,6 @@ class Company(models.Model):
 class ExternalAccount(models.Model):
     stripe_detail = models.ForeignKey(StripeDetail,on_delete=models.CASCADE, null=True)
     external_account_new_id = models.CharField(max_length=200)
-    name = models.CharField(max_length=100,null=True)
     object = models.CharField(max_length=100,blank=False) #Should be bank_account.
     country = models.CharField(max_length=100,blank=False) #Should be GB
     currency = models.CharField(max_length=100,blank=False) #Should be gbp

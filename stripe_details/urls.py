@@ -8,5 +8,6 @@ urlpatterns = [
     path('type/', views.stripe_legal_type, name='stripe_legal_type'),
     path('individual/', views.stripe_individual, name='stripe_individual'),
     path('company/', views.stripe_company, name='stripe_company'),
+    path('external_account/', views.external_account, name='external_account'),
 
 ]

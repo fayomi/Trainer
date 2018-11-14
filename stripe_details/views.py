@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 # from gym.models import User,TrainerProfile
-from .models import StripeDetail, Individual, Company
-from .forms import IndividualForm, CompanyForm
+from .models import StripeDetail, Individual, Company, ExternalAccount
+from .forms import IndividualForm, CompanyForm, ExternalAccountForm
 from django.contrib.auth.decorators import login_required
 
 import requests
@@ -97,9 +97,18 @@ def stripe_register(request):
 
 @login_required
 def stripe_legal_type(request):
+    user_id = request.user.id
+    stripe_detail = StripeDetail.objects.get(user=user_id)
+
+
     if (request.GET.get('individual')):
+        stripe_detail.legal_entity_type = 'individual'
+        stripe_detail.save()
+
         return redirect('stripe:stripe_individual')
     elif (request.GET.get('company')):
+        stripe_detail.legal_entity_type = 'company'
+        stripe_detail.save()
         return redirect('stripe:stripe_company')
 
 
@@ -151,7 +160,7 @@ def stripe_individual(request):
 
             send_to_stripe(stripe_detail)
 
-            return redirect('/')
+            return redirect('stripe:external_account')
     else:
         form = IndividualForm()
 
@@ -209,9 +218,98 @@ def stripe_company(request):
 
             send_to_stripe(stripe_detail)
 
-            return redirect('/')
+            return redirect('stripe:external_account')
     else:
         form = CompanyForm()
 
     context = {'form': form}
     return render(request,'stripe_details/stripe_company.html', context)
+
+
+def external_account(request):
+    user_id = request.user.id
+
+    # make this a global variable
+    stripe_detail = StripeDetail.objects.get(user=user_id)
+
+    # to get the users stripe account id
+    stripe_account = stripe_detail.stripe_id
+
+
+    object = 'bank_account'
+    country = 'GB'
+    currency = 'gbp'
+    # external_account.object = object
+    # external_account.country = country
+    # external_account.currency = currency
+    # external_account.account_holder_type = stripe_detail.legal_entity_type
+
+
+    def send_to_stripe(stripe_detail):
+        external_account = ExternalAccount.objects.get(stripe_detail=stripe_detail)
+
+        account_holder_name = external_account.account_holder_name
+        account_holder_type = stripe_detail.legal_entity_type
+        account_number = external_account.account_number
+        routing_number = external_account.routing_number
+
+        import time
+        acct = stripe.Account.retrieve(stripe_account)
+        acct.external_accounts.create(
+            external_account = {
+                'object': object,
+                'country': country,
+                'currency': currency,
+                'account_holder_name':account_holder_name,
+                'account_holder_type': account_holder_type,
+                'account_number': account_number,
+                'routing_number': routing_number
+
+            }    
+
+        )
+
+
+        acct.save()
+        print(acct)
+
+
+
+    if request.method == 'POST':
+        form = ExternalAccountForm(request.POST)
+
+        if form.is_valid():
+            account = form.save()
+            account.stripe_detail = stripe_detail
+            account.object = object
+            account.country = country
+            account.currency = currency
+            account.account_holder_type = stripe_detail.legal_entity_type
+            account.save()
+
+            send_to_stripe(stripe_detail)
+
+
+            return redirect('/')
+    else:
+        form = ExternalAccountForm()
+
+
+
+
+    context = {'form': form}
+    return render(request,'stripe_details/stripe_external_account.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #

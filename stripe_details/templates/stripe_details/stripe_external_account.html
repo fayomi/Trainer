@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Stripe Register</h1>
+<h2>Stripe External Account</h2>
+<br>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+
+  <input type="submit" class="btn btn-primary" name="" value="Add">
+
+</form>
+<br>
+
+
+{% endblock %}
