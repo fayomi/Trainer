@@ -15,7 +15,7 @@ class Order(models.Model):
     trainer_email = models.EmailField(max_length=250,blank=True,verbose_name='Trainer Email')
     created = models.DateTimeField(auto_now_add=True)
     subscription = models.BooleanField(default=False)
-    stripe_product_id = models.CharField(max_length=200,default='None')
+    stripe_product_name = models.CharField(max_length=200,default='None')
     stripe_plan_id = models.CharField(max_length=200,default='None')
     #stripe_customer_id = models.CharField(max_length=200,default='None')
 
